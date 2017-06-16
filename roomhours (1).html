@@ -1,0 +1,29 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DiBS Web API</title>
+    <script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.getJSON("http://chapelhill.evanced.info/dibsAPI/roomhours/2017-06-14/48",
+                function processData(jsonData) {
+
+                    // Loop through each data block
+                    $.each(jsonData, function (object, objectData) {
+
+                        $('#roomBlock').append("Room ID: " + objectData.RoomID + "<br />");
+                        $('#roomBlock').append("Start Time: " + objectData.StartTime + "<br />");
+                        $('#roomBlock').append("End Time: " + objectData.EndTime + "<br />");
+                        $('#roomBlock').append("<br />");
+                    });
+                });
+        });
+    </script>
+
+</head>
+<body>
+<h2>Room Hours Available</h2>
+    <div id="roomBlock">
+    </div>
+</body>
+</html>
