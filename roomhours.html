@@ -5,25 +5,43 @@
     <script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $.getJSON("http://chapelhill.evanced.info/dibsAPI/roomhours/2017-06-14/48",
+			var date = new Date().toISOString().slice(0,10);
+            $.getJSON("http://chapelhill.evanced.info/dibsAPI/roomhours/" + date + "/48",
                 function processData(jsonData) {
 
+					var items = []
                     // Loop through each data block
                     $.each(jsonData, function (object, objectData) {
-
-                        $('#roomBlock').append("Room ID: " + objectData.RoomID + "<br />");
-                        $('#roomBlock').append("Start Time: " + objectData.StartTime + "<br />");
-                        $('#roomBlock').append("End Time: " + objectData.EndTime + "<br />");
-                        $('#roomBlock').append("<br />");
+						
+						items.push("<tr>");
+						items.push("<td>" + objectData.StartTime + "</td>");
+						items.push("<td>" + objectData.EndTime + "</td>");
+						items.push("</tr>");
+						
+                        //$('#roomBlock').append("Room ID: " + objectData.RoomID + "<br />");
+                        //$('#roomBlock').append("Start Time: " + objectData.StartTime + "<br />");
+                        //$('#roomBlock').append("End Time: " + objectData.EndTime + "<br />");
+                        //$('#roomBlock').append("<br />");
+						
+						
                     });
+					$("<tbody/>", {
+					html: items.join("")
+					}).appendTo("table");
                 });
         });
     </script>
 
 </head>
 <body>
-<h2>Room Hours Available</h2>
-    <div id="roomBlock">
-    </div>
+<h2>Room 48 Hours Available</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Start Time</th>
+          <th>End Time</th>
+        </tr>
+      </thead>
+    </table>
 </body>
 </html>
