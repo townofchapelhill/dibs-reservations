@@ -2,28 +2,44 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>DiBS Web API</title>
-    <script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $.getJSON("http://chapelhill.evanced.info/dibsAPI/reservations/2017-06-14/48",
-                function processData(jsonData) {
+			var date = new Date().toISOString().slice(0,10);
+            $.getJSON("https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/48",
+            function processData(jsonData) {
+				
+				var items = []
+                // Loop through each data block
+                $.each(jsonData, function (object, objectData) {
+				
+					items.push("<tr>");
+					items.push("<td>" + objectData.StartTime + "</td>");
+					items.push("<td>" + objectData.EndTime + "</td>");
+					items.push("</tr>");
 
-                    // Loop through each data block
-                    $.each(jsonData, function (object, objectData) {
-
-                        $('#roomBlock').append("Room ID: " + objectData.RoomID + "<br />");
-                        $('#roomBlock').append("Start Time: " + objectData.StartTime + "<br />");
-                        $('#roomBlock').append("End Time: " + objectData.EndTime + "<br />");
-                        $('#roomBlock').append("<br />");
-                    });
+                    //$('#roomBlock').append("Room ID: " + objectData.RoomID + "<br />");
+                    //$('#roomBlock').append("Start Time: " + objectData.StartTime + "<br />");
+                    //$('#roomBlock').append("End Time: " + objectData.EndTime + "<br />");
+                    //$('#roomBlock').append("<br />");
                 });
+				$("<tbody/>", {
+				html: items.join("")
+				}).appendTo("table");
+            });
         });
     </script>
 
 </head>
 <body>
-<h2> Existing Reservations by date and building </h2>
-    <div id="roomBlock">
-    </div>
+<h2> Room 48 Reservations </h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Start Time</th>
+          <th>End Time</th>
+        </tr>
+      </thead>
+    </table>
 </body>
 </html>
