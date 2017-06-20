@@ -4,37 +4,48 @@
     <title>DiBS Web API</title>
     <script src="https://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="dibs.css"></link>
     <script type="text/javascript">
         $(document).ready(function () {
-			var room = 52;
 			var date = new Date().toISOString().slice(0,10);
-			$(".title").append("Room " + room + " Reservations for " + moment(date).format('MMMM Do, Y'));
+			$(".title").append("Room Reservations for " + moment(date).format('MMMM Do, Y'));
 			
-            $.getJSON("https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + room,
-            function processData(jsonData) {
-				
-				for(var t = 9; t < 20; t += .5){
+			var objectDatas = new Array();
+			
+			for(var room = 48; room <= 53; room++){
+				$.getJSON("https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + room,
+				function processData(jsonData) {
+					var roomData = new Array();
+					$.each(jsonData, function (object, objectData){
+						roomData.push(new Array(objectData.StartTime, objectData.EndTime));
+					});
+					objectDatas.push(roomData);
+				});
+			}
+			
+			console.log(objectDatas);
+			
+			for(var t = 9; t < 20; t += .5){
+				if(!isPast(t)){
 					var items = [];
-					var strikeS = "";
-					var strikeB = "";
-					if(isPast(t)) strikeS = "<s>", strikeB = "</s>";
 					items.push("<tr>");
-					items.push("<td>" + strikeS + formatTime(timeStr(t)) + strikeB + "</td>");
-					items.push("<td>" + strikeS + formatTime(timeStr(t + .5)) + strikeB + "</td>");
-					items[3] = ("<td>" + strikeS + "<a href=http://chapelhill.evanced.info/dibs/?room=" + room + ">Open</a>" + strikeB + "</td>");
-					$.each(jsonData, function (object, objectData) {
-						for(var k = .5; k <= duration(objectData.StartTime, objectData.EndTime); k += .5){
-							if(objectData.StartTime == timeStr(t) || objectData.EndTime == timeStr(t+k)){
-								items[3] = ("<td>" + strikeS + "Booked" + strikeB + "</td>");
+					items.push("<td>" + formatTime(timeStr(t)) + "</td>");
+					items.push("<td>" + formatTime(timeStr(t + .5)) + "</td>");
+					for(var n = 0; n <= 5; n++){
+						items[3 + n] = ("<td>" + "<a href=http://chapelhill.evanced.info/dibs/?room=" + (48 + n) + ">Open</a></td>");
+						for(var i = 0; i < objectDatas[n].length; i++){
+							for(var k = .5; k <= duration(objectDatas[n][i][0], objectDatas[n][i][1]); k += .5){
+								if(objectDatas[n][i][0] == timeStr(t) || objectDatas[n][i][1] == timeStr(t+k)){
+									items[3 + n] = ("<td>Booked</td>");
+								}
 							}
 						}
-					});
+					}
 					$("<tbody/>", {
 					html: items.join("")
 					}).appendTo("table");
 				}
-				
-            });
+			}
 			
 			function formatTime(t){
 				t = t.substr(11)
@@ -87,7 +98,12 @@
         <tr>
           <th>Start Time</th>
           <th>End Time</th>
-		  <th>Status</th>
+		  <th>Room 48</th>
+		  <th>Room 49</th>
+		  <th>Room 50</th>
+		  <th>Room 51</th>
+		  <th>Room 52</th>
+		  <th>Room 53</th>
         </tr>
       </thead>
     </table>
