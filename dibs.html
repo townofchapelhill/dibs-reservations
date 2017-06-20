@@ -6,38 +6,68 @@
     <script type="text/javascript">
         $(document).ready(function () {
 			var date = new Date().toISOString().slice(0,10);
+			$(".title").append(date);
+			
             $.getJSON("https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/48",
             function processData(jsonData) {
 				
-				var items = []
-                // Loop through each data block
-                $.each(jsonData, function (object, objectData) {
-				
+				for(var t = 9; t <= 19; t += .5){
+					var items = [];
 					items.push("<tr>");
-					items.push("<td>" + objectData.StartTime + "</td>");
-					items.push("<td>" + objectData.EndTime + "</td>");
-					items.push("</tr>");
-
-                    //$('#roomBlock').append("Room ID: " + objectData.RoomID + "<br />");
-                    //$('#roomBlock').append("Start Time: " + objectData.StartTime + "<br />");
-                    //$('#roomBlock').append("End Time: " + objectData.EndTime + "<br />");
-                    //$('#roomBlock').append("<br />");
-                });
-				$("<tbody/>", {
-				html: items.join("")
-				}).appendTo("table");
+					items.push("<td>" + formatTime(timeStr(t)) + "</td>");
+					items.push("<td>" + formatTime(timeStr(t + .5)) + "</td>");
+					$.each(jsonData, function (object, objectData) {
+						if(objectData.StartTime == timeStr(t) || objectData.EndTime == timeStr(t)){
+							items[3] = ("<td>Booked</td>");
+						}else{
+							items[3] = ("<td>Open</td>");
+						}
+					});
+					$("<tbody/>", {
+					html: items.join("")
+					}).appendTo("table");
+				}
+				
             });
-        });
+			
+			function formatTime(t){
+				t = t.substr(11)
+				if(t.substr(0, 2) > 11){
+					t += " PM"
+				}else{
+					t += " AM"
+				}if(t.substr(0, 2) > 12){
+					t = "0" + (t.substr(0, 2) - 12) + t.substr(2);
+				}else if(t.substr(0, 2) == 0){
+					t = "12" + t.substr(2);
+				}
+				return t;
+			}
+			
+			function timeStr(t){
+					
+				var timeStr = date + "T";
+				if(t < 10) timeStr += "0";
+				timeStr += t + ":00:00";
+				if(t % 1 != 0) timeStr = timeStr.substr(0, 13) + ":30" + timeStr.substr(18);
+				
+				return timeStr;
+					
+			}
+			
+		});
+			
     </script>
 
 </head>
 <body>
-<h2> Room 48 Reservations </h2>
+<h2 class="title"> Room 48 Reservations for </h2>
     <table class="table">
       <thead>
         <tr>
           <th>Start Time</th>
           <th>End Time</th>
+		  <th>Status</th>
         </tr>
       </thead>
     </table>

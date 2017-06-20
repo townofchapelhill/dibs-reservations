@@ -6,6 +6,8 @@
     <script type="text/javascript">
         $(document).ready(function () {
 			var date = new Date().toISOString().slice(0,10);
+			$(".title").append(date);
+			
             $.getJSON("https://chapelhill.evanced.info/dibsAPI/roomhours/" + date + "/48",
                 function processData(jsonData) {
 
@@ -13,33 +15,53 @@
                     // Loop through each data block
                     $.each(jsonData, function (object, objectData) {
 						
-						items.push("<tr>");
-						items.push("<td>" + objectData.StartTime + "</td>");
-						items.push("<td>" + objectData.EndTime + "</td>");
-						items.push("</tr>");
-						
-                        //$('#roomBlock').append("Room ID: " + objectData.RoomID + "<br />");
-                        //$('#roomBlock').append("Start Time: " + objectData.StartTime + "<br />");
-                        //$('#roomBlock').append("End Time: " + objectData.EndTime + "<br />");
-                        //$('#roomBlock').append("<br />");
-						
+					items.push("<tr>");
+					items.push("<td>" + formatTime(objectData.StartTime) + "</td>");
+					items.push("<td>" + formatTime(objectData.EndTime) + "</td>");
+					items.push("</tr>");						
 						
                     });
 					$("<tbody/>", {
 					html: items.join("")
 					}).appendTo("table");
                 });
+				
+				function formatTime(t){
+					t = t.substr(11)
+					if(t.substr(0, 2) > 11){
+						t += " PM"
+					}else{
+						t += " AM"
+					}if(t.substr(0, 2) > 12){
+						t = "0" + (t.substr(0, 2) - 12) + t.substr(2);
+					}else if(t.substr(0, 2) == 0){
+						t = "12" + t.substr(2);
+					}
+					return t;
+				}
+				
+				function timeStr(t){
+					
+				var timeStr = date + "T";
+				if(t < 10) timeStr += "0";
+				timeStr += t + ":00:00";
+				
+				return timeStr
+					
+				}
+				
         });
     </script>
 
 </head>
 <body>
-<h2>Room 48 Hours Available</h2>
+<h2 class="title">Room 48 Hours Available for </h2>
     <table class="table">
       <thead>
         <tr>
           <th>Start Time</th>
           <th>End Time</th>
+		  <th>Status</th>
         </tr>
       </thead>
     </table>
