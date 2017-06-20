@@ -1,0 +1,95 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DiBS Web API</title>
+    <script src="https://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="dibs.css"></link>
+    <script type="text/javascript">
+        $(document).ready(function () {
+			var room = 48;
+			var date = new Date().toISOString().slice(0,10);
+			$(".title").append("Room 48 Reservations for " + moment(date).format('MMMM Do, Y'));
+			
+            $.getJSON("https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + room,
+            function processData(jsonData) {
+				
+				for(var t = 9; t < 20; t += .5){
+					if(!isPast(t)){
+						var items = [];
+						items.push("<tr>");
+						items.push("<td>" + formatTime(timeStr(t)) + "</td>");
+						items.push("<td>" + formatTime(timeStr(t + .5)) + "</td>");
+						items[3] = ("<td>" + "<a href=http://chapelhill.evanced.info/dibs/?room=" + room + ">Open</a></td>");
+						$.each(jsonData, function (object, objectData) {
+							for(var k = .5; k <= duration(objectData.StartTime, objectData.EndTime); k += .5){
+								if(objectData.StartTime == timeStr(t) || objectData.EndTime == timeStr(t+k)){
+									items[3] = ("<td>Booked</td>");
+								}
+							}
+						});
+						$("<tbody/>", {
+						html: items.join("")
+						}).appendTo("table");
+					}
+				}
+				
+            });
+			
+			function formatTime(t){
+				t = t.substr(11)
+				if(t.substr(0, 2) > 11){
+					t += " PM"
+				}else{
+					t += " AM"
+				}if(t.substr(0, 2) > 12){
+					t = "0" + (t.substr(0, 2) - 12) + t.substr(2);
+				}else if(t.substr(0, 2) == 0){
+					t = "12" + t.substr(2);
+				}
+				return t;
+			}
+			
+			function timeStr(t){
+					
+				var timeStr = date + "T";
+				if(t < 10) timeStr += "0";
+				timeStr += t + ":00:00";
+				if(t % 1 != 0) timeStr = timeStr.substr(0, 13) + ":30" + timeStr.substr(18);
+				
+				return timeStr;
+					
+			}
+			
+			function duration(s, e){
+				var output = parseInt(e.substr(11, 13)) - parseInt(s.substr(11, 13));
+				if(s.substr(14, 16) == "30") output -= .5;
+				if(e.substr(14, 16) == "30") output += .5;
+				return output;
+			}
+			
+			function isPast(t){
+				t += .5;
+				var time = new Date();
+				if(time.getHours() > parseInt(timeStr(t).substr(11, 13)) || (time.getHours() == parseInt(timeStr(t).substr(11, 13)) && time.getMinutes() > parseInt(timeStr(t).substr(14, 16)))) return true;
+				else return false;
+			}
+			
+		});
+			
+    </script>
+
+</head>
+<body>
+<h2 class="title"></h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Start Time</th>
+          <th>End Time</th>
+		  <th>Status</th>
+        </tr>
+      </thead>
+    </table>
+</body>
+</html>
