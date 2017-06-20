@@ -9,7 +9,7 @@
         $(document).ready(function () {
 			var room = 48;
 			var date = new Date().toISOString().slice(0,10);
-			$(".title").append("Room 48 Reservations for " + moment(date).format('MMMM Do, Y'));
+			$(".title").append("Room " + room + " Reservations for " + moment(date).format('MMMM Do, Y'));
 			
             $.getJSON("https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + room,
             function processData(jsonData) {
