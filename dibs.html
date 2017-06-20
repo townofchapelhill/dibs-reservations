@@ -11,16 +11,17 @@
             $.getJSON("https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/48",
             function processData(jsonData) {
 				
-				for(var t = 9; t <= 19; t += .5){
+				for(var t = 9; t < 20; t += .5){
 					var items = [];
 					items.push("<tr>");
 					items.push("<td>" + formatTime(timeStr(t)) + "</td>");
 					items.push("<td>" + formatTime(timeStr(t + .5)) + "</td>");
+					items[3] = ("<td>Open</td>");
 					$.each(jsonData, function (object, objectData) {
-						if(objectData.StartTime == timeStr(t) || objectData.EndTime == timeStr(t)){
-							items[3] = ("<td>Booked</td>");
-						}else{
-							items[3] = ("<td>Open</td>");
+						for(var k = .5; k <= duration(objectData.StartTime, objectData.EndTime); k += .5){
+							if(objectData.StartTime == timeStr(t) || objectData.EndTime == timeStr(t+k)){
+								items[3] = ("<td>Booked</td>");
+							}
 						}
 					});
 					$("<tbody/>", {
@@ -53,6 +54,13 @@
 				
 				return timeStr;
 					
+			}
+			
+			function duration(s, e){
+				var output = parseInt(e.substr(11, 13)) - parseInt(s.substr(11, 13));
+				if(s.substr(14, 16) == "30") output -= .5;
+				if(e.substr(14, 16) == "30") output += .5;
+				return output;
 			}
 			
 		});
