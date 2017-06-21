@@ -10,20 +10,24 @@
 			var date = new Date().toISOString().slice(0,10);
 			$(".title").append("Room Reservations for " + moment(date).format('MMMM Do, Y'));
 			
-			var objectDatas = new Array();
+			var objectDatas = [];
 			
 			for(var room = 48; room <= 53; room++){
 				$.getJSON("https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + room,
 				function processData(jsonData) {
-					var roomData = new Array();
+					var roomData = [];
 					$.each(jsonData, function (object, objectData){
 						roomData.push(new Array(objectData.StartTime, objectData.EndTime));
 					});
+					//console.log(roomData);
 					objectDatas.push(roomData);
+					//console.log(objectDatas);
+					//console.log(objectDatas.length);
+					if(objectDatas.length == 6) mainLoop();
 				});
 			}
 			
-			console.log(objectDatas);
+			function mainLoop(){
 			
 			for(var t = 9; t < 20; t += .5){
 				if(!isPast(t)){
@@ -45,6 +49,7 @@
 					html: items.join("")
 					}).appendTo("table");
 				}
+			}
 			}
 			
 			function formatTime(t){
