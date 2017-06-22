@@ -1,3 +1,16 @@
-div>table {
-  float: left
+table, th, td{
+	border-collapse: collapse;
+    border: 1px solid black;
+	text-align: center;
+	margin: 0 auto;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+th, td {
+    padding: 5px;
+}
+
+h2{
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
 }
