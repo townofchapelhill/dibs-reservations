@@ -13,21 +13,25 @@
 			var objectDatas = [];
 			
 			for(var room = 48; room <= 53; room++){
+				getData(room);
+			}
+			
+			function getData(room){
 				$.getJSON("https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + room,
 				function processData(jsonData) {
 					var roomData = [];
 					$.each(jsonData, function (object, objectData){
 						roomData.push(new Array(objectData.StartTime, objectData.EndTime));
 					});
-					//console.log(roomData);
-					objectDatas.push(roomData);
-					//console.log(objectDatas);
-					//console.log(objectDatas.length);
+					objectDatas[room - 48] = roomData;
+					
 					if(objectDatas.length == 6) mainLoop();
 				});
 			}
 			
 			function mainLoop(){
+			
+			//console.log(objectDatas);
 			
 			for(var t = 9; t < 20; t += .5){
 				if(!isPast(t)){
