@@ -54,6 +54,7 @@
 					}).appendTo("table");
 				}
 			}
+			setColors();
 			}
 			
 			function formatTime(t){
@@ -93,6 +94,21 @@
 				var time = new Date();
 				if(time.getHours() > parseInt(timeStr(t).substr(11, 13)) || (time.getHours() == parseInt(timeStr(t).substr(11, 13)) && time.getMinutes() > parseInt(timeStr(t).substr(14, 16)))) return true;
 				else return false;
+			}
+			
+			function setColors(){
+				var allTableCells = document.getElementsByTagName("td");
+
+				for(var i = 0, max = allTableCells.length; i < max; i++) {
+				var node = allTableCells[i];
+
+				//get the text from the first child node - which should be a text node
+				var currentText = node.childNodes[0].nodeValue; 
+
+				//check for 'one' and assign this table cell's background color accordingly 
+				if (currentText === "Booked")
+				node.style.backgroundColor = "#cccccc";
+				}
 			}
 			
 		});
