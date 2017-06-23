@@ -7,6 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="dibs.css"></link>
     <script type="text/javascript">
         $(document).ready(function () {
+			//Change the room variable as needed. I might make this a user input later.
 			var room = 48;
 			var date = new Date().toISOString().slice(0,10);
 			$(".title").append("Room " + room + " Reservations for " + moment(date).format('MMMM Do, Y'));
@@ -14,13 +15,15 @@
             $.getJSON("https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + room,
             function processData(jsonData) {
 				
-				for(var t = 9; t < 20; t += .5){
+				for(var t = openHours()[0]; t < openHours()[1]; t += .5){
 					if(!isPast(t)){
 						var items = [];
+						//fills the "Start Time" and "End Time" columns
 						items.push("<tr>");
 						items.push("<td>" + formatTime(timeStr(t)) + "</td>");
 						items.push("<td>" + formatTime(timeStr(t + .5)) + "</td>");
 						items[3] = ("<td>" + "<a href=http://chapelhill.evanced.info/dibs/?room=" + room + ">Open</a></td>");
+						//Checks whether the room is taken for any blocks of time.
 						$.each(jsonData, function (object, objectData) {
 							for(var k = .5; k <= duration(objectData.StartTime, objectData.EndTime); k += .5){
 								if(objectData.StartTime == timeStr(t) || objectData.EndTime == timeStr(t+k)){
@@ -38,6 +41,9 @@
 				
             });
 			
+			/**
+			*Converts the variable used to store (t)ime in the main loop into the format used by XML files
+			**/
 			function formatTime(t){
 				t = t.substr(11)
 				if(t.substr(0, 2) > 11){
@@ -63,6 +69,9 @@
 					
 			}
 			
+			/**
+			*Returns the amount of time (in hours) between a (s)tart time and an (e)nd time
+			**/
 			function duration(s, e){
 				var output = parseInt(e.substr(11, 13)) - parseInt(s.substr(11, 13));
 				if(s.substr(14, 16) == "30") output -= .5;
@@ -70,6 +79,9 @@
 				return output;
 			}
 			
+			/**
+			*Returns whether a given time is in the past
+			**/
 			function isPast(t){
 				t += .5;
 				var time = new Date();
@@ -77,6 +89,9 @@
 				else return false;
 			}
 			
+			/**
+			*Sets the background colors of all cells with "Booked" in them to gray
+			**/
 			function setColors(){
 				var allTableCells = document.getElementsByTagName("td");
 
@@ -90,6 +105,17 @@
 				if (currentText === "Booked")
 				node.style.backgroundColor = "#cccccc";
 				}
+			}
+			
+			/**
+			*Returns a two-integer array of the library's open hours depending on the day of the week: 10 AM - 6 PM on weekends,
+			*9 AM - 6 PM on Fridays, and 9 AM - 8 PM otherwise.
+			**/
+			function openHours(){
+				var d = new Date();
+				if(d.getDay() == 0 || d.getDay() == 6) return [10, 18];
+				if(d.getDay() == 5) return [9, 18];
+				else return [9, 20];
 			}
 			
 		});
