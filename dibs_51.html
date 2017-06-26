@@ -10,7 +10,7 @@
 			//Change the room variable as needed. I might make this a user input later.
 			var room = 51;
 			var date = new Date().toISOString().slice(0,10);
-			$(".title").append("Room " + (room-47) + " Reservations for " + moment(date).format('MMMM Do, Y'));
+			$(".title").append("Study Room " + (room-47) + " Reservations for " + moment(date).format('MMMM Do, Y'));
 			
             $.getJSON("https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + room,
             function processData(jsonData) {
@@ -45,7 +45,7 @@
 			*Converts the variable used to store (t)ime in the main loop into the format used by XML files
 			**/
 			function formatTime(t){
-				t = t.substr(11)
+				t = t.substr(11);
 				if(t.substr(0, 2) > 11){
 					t += " PM"
 				}else{
@@ -55,7 +55,7 @@
 				}else if(t.substr(0, 2) == 0){
 					t = "12" + t.substr(2);
 				}
-				return t;
+				return t.substr(0, 5) + t.substr(8);
 			}
 			
 			function timeStr(t){
@@ -90,21 +90,31 @@
 			}
 			
 			/**
-			*Sets the background colors of all cells with "Booked" in them to gray
+			*Sets the background colors of all cells with "Booked" in them to red, "Open" to green, and headers to blue.
 			**/
 			function setColors(){
 				var allTableCells = document.getElementsByTagName("td");
 
 				for(var i = 0, max = allTableCells.length; i < max; i++) {
-				var node = allTableCells[i];
+					var node = allTableCells[i];
 
-				//get the text from the first child node - which should be a text node
-				var currentText = node.childNodes[0].nodeValue; 
+					var currentText = node.childNodes[0].nodeValue; 
 
-				//check for 'one' and assign this table cell's background color accordingly 
-				if (currentText === "Booked")
-				node.style.backgroundColor = "#cccccc";
+					if (currentText === "Booked"){
+						node.style.backgroundColor = "#f44641";
+					}else if (currentText === null){
+						node.style.backgroundColor = "#79bd90";
+					}else{
+						node.style.backgroundColor = "#00bff3";
+					}
 				}
+				
+				var allHeaders = document.getElementsByTagName("th");
+				
+				for(var i = 0, max = allHeaders.length; i < max; i++) {
+					allHeaders[i].style.backgroundColor = "#00bff3";
+				}
+				
 			}
 			
 			/**

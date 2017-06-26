@@ -8,7 +8,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
 			var date = new Date().toISOString().slice(0,10);
-			$(".title").append("Room Reservations for " + moment(date).format('MMMM Do, Y'));
+			$(".title").append("Study Room Reservations for " + moment(date).format('MMMM Do, Y'));
 			
 			var objectDatas = [];
 			
@@ -76,7 +76,7 @@
 			*Converts the variable used to store (t)ime in the main loop into the time in AM/PM format
 			**/
 			function formatTime(t){
-				t = t.substr(11)
+				t = t.substr(11);
 				if(t.substr(0, 2) > 11){
 					t += " PM"
 				}else{
@@ -86,7 +86,7 @@
 				}else if(t.substr(0, 2) == 0){
 					t = "12" + t.substr(2);
 				}
-				return t;
+				return t.substr(0, 5) + t.substr(8);
 			}
 			
 			/**
@@ -124,19 +124,31 @@
 			}
 			
 			/**
-			*Sets the background colors of all cells with "Booked" in them to gray
+			*Sets the background colors of all cells with "Booked" in them to red, "Open" to green, and headers to blue.
 			**/
 			function setColors(){
 				var allTableCells = document.getElementsByTagName("td");
 
 				for(var i = 0, max = allTableCells.length; i < max; i++) {
-				var node = allTableCells[i];
+					var node = allTableCells[i];
 
-				var currentText = node.childNodes[0].nodeValue; 
+					var currentText = node.childNodes[0].nodeValue; 
 
-				if (currentText === "Booked")
-				node.style.backgroundColor = "#cccccc";
+					if (currentText === "Booked"){
+						node.style.backgroundColor = "#f44641";
+					}else if (currentText === null){
+						node.style.backgroundColor = "#79bd90";
+					}else{
+						node.style.backgroundColor = "#00bff3";
+					}
 				}
+				
+				var allHeaders = document.getElementsByTagName("th");
+				
+				for(var i = 0, max = allHeaders.length; i < max; i++) {
+					allHeaders[i].style.backgroundColor = "#00bff3";
+				}
+				
 			}
 			
 			/**
@@ -162,12 +174,12 @@
         <tr>
           <th>Start Time</th>
           <th>End Time</th>
-		  <th>Room 48</th>
-		  <th>Room 49</th>
-		  <th>Room 50</th>
-		  <th>Room 51</th>
-		  <th>Room 52</th>
-		  <th>Room 53</th>
+		  <th>Room 1</th>
+		  <th>Room 2</th>
+		  <th>Room 3</th>
+		  <th>Room 4</th>
+		  <th>Room 5</th>
+		  <th>Room 6</th>
         </tr>
       </thead>
     </table>

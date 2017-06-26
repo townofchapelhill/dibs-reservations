@@ -4,10 +4,12 @@ table, th, td{
 	text-align: center;
 	margin: 0 auto;
 	font-family: Arial, Helvetica, sans-serif;
+	color: #ffffff;
 }
 
 th, td {
-    padding: 5px;
+    padding: 7px;
+	font-size: 2em;
 }
 
 h2{
