@@ -82,7 +82,7 @@
 				}else{
 					t += " AM"
 				}if(t.substr(0, 2) > 12){
-					t = " " + (t.substr(0, 2) - 12) + t.substr(2);
+					t = "0" + (t.substr(0, 2) - 12) + t.substr(2);
 				}else if(t.substr(0, 2) == 0){
 					t = "12" + t.substr(2);
 				}
