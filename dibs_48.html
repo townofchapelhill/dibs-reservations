@@ -20,8 +20,7 @@
 						var items = [];
 						//fills the "Start Time" and "End Time" columns
 						items.push("<tr>");
-						items.push("<td>" + formatTime(timeStr(t)) + "</td>");
-						items.push("<td>" + formatTime(timeStr(t + .5)) + "</td>");
+						items.push("<td>" + formatTime(timeStr(t)) + " -" + formatTime(timeStr(t + .5)) + "</td>");
 						items[3] = ("<td>" + "<a href=http://chapelhill.evanced.info/dibs/?room=" + room + ">Open</a></td>");
 						//Checks whether the room is taken for any blocks of time.
 						$.each(jsonData, function (object, objectData) {
