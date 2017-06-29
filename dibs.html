@@ -8,7 +8,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
 			var date = new Date().toISOString().slice(0,10);
-			$(".title").append("Tap an open spot to book a room on " + moment(date).format('MMMM Do') + ".");
+			$(".title").append("Tap any green box to call dibs on a room today.");
 			
 			var objectDatas = [];
 			
@@ -76,11 +76,12 @@
 			**/
 			function formatTime(t){
 				t = t.substr(11);
-				if(t.substr(0, 2) > 11){
-					t += " pm"
-				}else{
-					t += " am"
-				}if(t.substr(0, 2) > 12){
+				//if(t.substr(0, 2) > 11){
+				//	t += " pm"
+				//}else{
+				//	t += " am"
+				//}
+				if(t.substr(0, 2) > 12){
 					t = " " + (t.substr(0, 2) - 12) + t.substr(2);
 				}else if(t.substr(0, 2) == 0){
 					t = "12" + t.substr(2);
@@ -134,7 +135,7 @@
 					var currentText = node.childNodes[0].nodeValue; 
 
 					if(currentText === "Booked"){
-						node.style.backgroundColor = "#d6d6d6";
+						node.style.backgroundColor = "#666666";
 						node.style.color = "#ffffff";
 					}else if(currentText === null){
 						node.style.backgroundColor = "#79bd90";
