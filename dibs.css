@@ -16,7 +16,16 @@ h2{
 	font-family: Arial, Helvetica, sans-serif;
 }
 
-h3{
-	font-size: 10em;
-	text-align: left;
+body{
+  background: url(dibs.png) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.col-sm-5{
+	font-size: 40em;
+	color: ffffff;
+	text-align: right;
 }
