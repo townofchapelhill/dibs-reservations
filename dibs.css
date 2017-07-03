@@ -31,11 +31,12 @@ body{
 
 .col-sm-5{
 	color: ffffff;
-	text-align: right;
+	text-align: center;
 }
 
 .col-sm-4{
-	width: 55%
+	width: 55%;
+	text-align: center;
 }
 
 .room-number{
@@ -45,5 +46,4 @@ body{
 
 .instructions{
 	font-size: 1.5em;
-	text-align: center;
 }
