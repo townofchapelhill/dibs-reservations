@@ -6,8 +6,10 @@ table, th, td{
 	font-family: Arial, Helvetica, sans-serif;
 }
 
-.table-responsive{
+.table-responsive a{
 	width: 100%;
+	display: block;
+    text-decoration: none;
 }
 
 th, td {
