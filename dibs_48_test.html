@@ -1,0 +1,161 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DiBS Web API</title>
+    <script src="https://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="dibs.css"></link>
+    <script type="text/javascript">
+        $(document).ready(function () {
+			//Change the room variable as needed. I might make this a user input later.
+			var room = 48;
+			var date = new Date().toISOString().slice(0,10);
+			$(".instructions").append("Tap a green spot to book this room today.");
+			$(".room-number").append((room - 47));
+			
+            $.getJSON("https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + room,
+            function processData(jsonData) {
+				
+				for(var t = openHours()[0]; t < openHours()[1]; t += .5){
+					if(!isPast(t)){
+						var items = [];
+						//fills the "Start Time" and "End Time" columns
+						items.push("<tr>");
+						items.push("<td>" + formatTime(timeStr(t)) + " -" + formatTime(timeStr(t + .5)) + "</td>");
+						items[3] = ("<td><a href=http://chapelhill.evanced.info/dibs/?room=" + room + ">Open</a></td>");
+						//Checks whether the room is taken for any blocks of time.
+						$.each(jsonData, function (object, objectData) {
+							for(var k = .5; k <= duration(objectData.StartTime, objectData.EndTime); k += .5){
+								if(objectData.StartTime == timeStr(t) || objectData.EndTime == timeStr(t+k)){
+									items[3] = ("<td>Booked</td>");
+								}
+							}
+						});
+						$("<tbody/>", {
+						html: items.join("")
+						}).appendTo("table");
+					}
+				}
+				
+				setColors();
+				
+            });
+			
+			/**
+			*Converts the variable used to store (t)ime in the main loop into the format used by XML files
+			**/
+			function formatTime(t){
+				t = t.substr(11);
+				//if(t.substr(0, 2) > 11){
+				//	t += " pm"
+				//}else{
+				//	t += " am"
+				//}
+				if(t.substr(0, 2) > 12){
+					t = " " + (t.substr(0, 2) - 12) + t.substr(2);
+				}else if(t.substr(0, 2) == 0){
+					t = "12" + t.substr(2);
+				}
+				return t.substr(0, 5) + t.substr(8);
+			}
+			
+			function timeStr(t){
+					
+				var timeStr = date + "T";
+				if(t < 10) timeStr += "0";
+				timeStr += t + ":00:00";
+				if(t % 1 != 0) timeStr = timeStr.substr(0, 13) + ":30" + timeStr.substr(18);
+				
+				return timeStr;
+					
+			}
+			
+			/**
+			*Returns the amount of time (in hours) between a (s)tart time and an (e)nd time
+			**/
+			function duration(s, e){
+				var output = parseInt(e.substr(11, 13)) - parseInt(s.substr(11, 13));
+				if(s.substr(14, 16) == "30") output -= .5;
+				if(e.substr(14, 16) == "30") output += .5;
+				return output;
+			}
+			
+			/**
+			*Returns whether a given time is in the past
+			**/
+			function isPast(t){
+				t += .5;
+				var time = new Date();
+				if(time.getHours() > parseInt(timeStr(t).substr(11, 13)) || (time.getHours() == parseInt(timeStr(t).substr(11, 13)) && time.getMinutes() > parseInt(timeStr(t).substr(14, 16)))) return true;
+				else return false;
+			}
+			
+			/**
+			*Sets the background colors of all cells with "Booked" in them to red, "Open" to green, and headers to blue.
+			**/
+			function setColors(){
+				var allTableCells = document.getElementsByTagName("td");
+				for(var i = 0, max = allTableCells.length; i < max; i++) {
+					var node = allTableCells[i];
+					var timeDesc = allTableCells[i - 1];
+					var currentText = node.childNodes[0].nodeValue; 
+					if(currentText === "Booked"){
+						node.style.backgroundColor = "#d6d6d6";
+						node.style.color = "#666666";
+						timeDesc.style.backgroundColor = "#d6d6d6";
+						timeDesc.style.color = "#666666";
+					}else if(currentText === null){
+						node.style.backgroundColor = "#79bd90";
+						timeDesc.style.backgroundColor = "#79bd90";
+					}else{
+						node.style.backgroundColor = "#ffffff";
+						node.style.color = "#007ebd";
+					}
+				}
+				
+				var allHeaders = document.getElementsByTagName("th");
+				
+				for(var i = 0, max = allHeaders.length; i < max; i++) {
+					allHeaders[i].style.backgroundColor = "#1975bc";
+					allHeaders[i].style.color = "#ffffff";
+				}
+				
+				var elements = document.getElementsByTagName('a');
+				for (var i = 0; i < elements.length; i++) {
+					elements[i].style.color = "ffffff";
+				}
+				
+			}
+			
+			/**
+			*Returns a two-integer array of the library's open hours depending on the day of the week: 10 AM - 6 PM on weekends,
+			*9 AM - 6 PM on Fridays, and 9 AM - 8 PM otherwise.
+			**/
+			function openHours(){
+				var d = new Date();
+				if(d.getDay() == 0 || d.getDay() == 6) return [10, 18];
+				if(d.getDay() == 5) return [9, 18];
+				else return [9, 20];
+			}
+			
+		});
+			
+    </script>
+
+</head>
+<body>
+<h2 class="title"></h2>
+	<div class = "col-sm-5">
+	<div class = "room-number"></div>
+	<div class = "instructions"></div>
+	</div>
+	<div class = "col-sm-4">
+	<div class = "table-responsive">
+    <table class="table">
+    </table>
+	</div>
+	</div>
+</body>
+</html>
