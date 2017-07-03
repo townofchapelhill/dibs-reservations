@@ -12,8 +12,8 @@
 			//Change the room variable as needed. I might make this a user input later.
 			var room = 48;
 			var date = new Date().toISOString().slice(0,10);
-			$(".title").append("Tap a green spot to book this room today.");
-			$(".col-sm-5").append((room - 47));
+			$(".instructions").append("Tap a green spot to book this room today.");
+			$(".room-number").append((room - 47));
 			
             $.getJSON("https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + room,
             function processData(jsonData) {
@@ -143,7 +143,10 @@
 </head>
 <body>
 <h2 class="title"></h2>
-	<div class = "col-sm-5"></div>
+	<div class = "col-sm-5">
+	<div class = "instructions"></div>
+	<div class = "room-number"></div>
+	</div>
 	<div class = "col-sm-4">
     <table class="table">
       <thead>

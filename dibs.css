@@ -17,15 +17,23 @@ h2{
 }
 
 body{
-  background: url(dibs.png) no-repeat center center fixed;
+  /*background: url(dibs.png) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  background-size: cover;
+  background-size: cover;*/
+  background-color: 000000;
 }
 
 .col-sm-5{
-	font-size: 40em;
 	color: ffffff;
 	text-align: right;
+}
+
+.room-number{
+	font-size: 40em;
+}
+
+.instructions{
+	font-size: 2em;
 }
