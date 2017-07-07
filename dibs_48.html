@@ -22,12 +22,13 @@
 						var items = [];
 						//fills the "Start Time" and "End Time" columns
 						items.push("<tr>");
-						items.push("<td>" + formatTime(timeStr(t)) + " -" + formatTime(timeStr(t + .5)) + "</td>");
+						items.push("<td><a href=http://chapelhill.evanced.info/dibs/?room=" + room + ">" + formatTime(timeStr(t)) + " -" + formatTime(timeStr(t + .5)) + "</a></td>");
 						items[3] = ("<td><a href=http://chapelhill.evanced.info/dibs/?room=" + room + ">Open</a></td>");
 						//Checks whether the room is taken for any blocks of time.
 						$.each(jsonData, function (object, objectData) {
 							for(var k = .5; k <= duration(objectData.StartTime, objectData.EndTime); k += .5){
 								if(objectData.StartTime == timeStr(t) || objectData.EndTime == timeStr(t+k)){
+									items[1] = "<td>" + formatTime(timeStr(t)) + " -" + formatTime(timeStr(t + .5)) + "</td>";
 									items[3] = ("<td>Booked</td>");
 								}
 							}
@@ -105,7 +106,7 @@
 						node.style.color = "#666666";
 						timeDesc.style.backgroundColor = "#d6d6d6";
 						timeDesc.style.color = "#666666";
-					}else if(currentText === null){
+					}else if(currentText === null && i % 2 == 1){
 						node.style.backgroundColor = "#79bd90";
 						timeDesc.style.backgroundColor = "#79bd90";
 						timeDesc.style.color = "#ffffff";
