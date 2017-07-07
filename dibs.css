@@ -23,12 +23,11 @@ h2{
 }
 
 body{
-  /*background: url(dibs.png) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;*/
-  background-color: 000000;
+  background: url(header.png) no-repeat center top, url(dibs_48.png) no-repeat center center fixed;
+  -webkit-background-size: contain, cover;
+  -moz-background-size: contain, cover;
+  -o-background-size: contain, cover;
+  background-size: contain, cover;
 }
 
 .col-sm-5{
