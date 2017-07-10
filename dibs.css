@@ -23,7 +23,7 @@ h2{
 }
 
 body{
-  background: url(header.png) no-repeat center top, url(dibs_1.png) no-repeat center center fixed;
+  background: url(header.png) no-repeat center top, url(dibs.png) no-repeat center center fixed;
   -webkit-background-size: contain, cover;
   -moz-background-size: contain, cover;
   -o-background-size: contain, cover;
