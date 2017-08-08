@@ -8,6 +8,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
 			var date = new Date().toISOString().slice(0,10);
+			$(".title").append("Room reservations for " + moment(date).format('MMMM Do, Y'));
 			
 			var objectDatas = [];
 			var rooms = [48, 49, 50, 51, 52, 53, 63];
@@ -42,7 +43,6 @@
 			*Don't say I didn't warn you.
 			**/
 			function mainLoop(){
-				console.log("Please tell me this is actually somewhat working.");
 				for(var t = openHours()[0]; t < openHours()[1]; t += .5){
 					if(!isPast(t)){
 						var items = [];
@@ -51,7 +51,7 @@
 						items.push("<td>" + formatTime(timeStr(t)) + " -" + formatTime(timeStr(t + .5)) + "</td>");
 						//checks to see whether a room is booked for any time period;
 						for(var n = 0; n < rooms.length; n++){
-							items[3 + n] = ("<td>" + "<a href=http://chapelhill.evanced.info/dibs/?room=" + (rooms[n]) + ">Open</a></td>");
+							items[3 + n] = ("<td><a href=http://chapelhill.evanced.info/dibs/?room=" + (rooms[n]) + ">Open</a></td>");
 							for(var i = 0; i < objectDatas[n].length; i++){
 								for(var k = .5; k <= duration(objectDatas[n][i][0], objectDatas[n][i][1]); k += .5){
 									if(objectDatas[n][i][0] == timeStr(t) || objectDatas[n][i][1] == timeStr(t+k)){
@@ -60,7 +60,6 @@
 								}
 							}
 						}
-						console.log("Happening");
 						//appends data to the table
 						$("<tbody/>", {
 						html: items.join("")
@@ -136,8 +135,8 @@
 					var currentText = node.childNodes[0].nodeValue; 
 
 					if(currentText === "Booked"){
-						node.style.backgroundColor = "#666666";
-						node.style.color = "#ffffff";
+						node.style.backgroundColor = "#d6d6d6";
+						node.style.color = "#666666";
 					}else if(currentText === null){
 						node.style.backgroundColor = "#79bd90";
 					}else{

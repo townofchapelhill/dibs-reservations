@@ -6,7 +6,7 @@ table, th, td{
 	font-family: Arial, Helvetica, sans-serif;
 }
 
-.table-responsive a{
+.table a{
 	width: 100%;
 	display: block;
     text-decoration: none;
@@ -38,6 +38,10 @@ body{
 .col-sm-4{
 	width: 55%;
 	text-align: center;
+}
+
+.title{
+	color: ffffff;
 }
 
 .room-number{

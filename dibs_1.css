@@ -18,8 +18,9 @@ th, td {
 }
 
 h2{
-	text-align: center;
+	text-align: left;
 	font-family: Arial, Helvetica, sans-serif;
+	color: ffffff;
 }
 
 body{
@@ -48,3 +49,11 @@ body{
 .instructions{
 	font-size: 1.5em;
 }
+
+.foot{
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+	color: ffffff;
+	font-size: 20px;
+}
+	
