@@ -54,7 +54,7 @@
 							items[3 + n] = ("<td><a href=http://chapelhill.evanced.info/dibs/?room=" + (rooms[n]) + ">Open</a></td>");
 							for(var i = 0; i < objectDatas[n].length; i++){
 								for(var k = .5; k <= duration(objectDatas[n][i][0], objectDatas[n][i][1]); k += .5){
-									if(objectDatas[n][i][0] == timeStr(t) || objectDatas[n][i][1] == timeStr(t+k)){
+									if(objectDatas[n][i][0] == timeStr(t) || (objectDatas[n][i][1] == timeStr(t+k) && toTime(objectDatas[n][i][0]) < t)){
 										items[3 + n] = ("<td>Booked</td>");
 									}
 								}
@@ -110,6 +110,15 @@
 				var output = parseInt(e.substr(11, 13)) - parseInt(s.substr(11, 13));
 				if(s.substr(14, 16) == "30") output -= .5;
 				if(e.substr(14, 16) == "30") output += .5;
+				return output;
+			}
+			
+			/**
+			*Converts a XML format time string into the time format used by the script.
+			**/
+			function toTime(t){
+				var output = parseInt(t.substr(11, 13));
+				if(t.substr(14, 16) == "30") output += .5;
 				return output;
 			}
 			

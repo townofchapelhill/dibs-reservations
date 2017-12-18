@@ -28,7 +28,7 @@
 						//Checks whether the room is taken for any blocks of time.
 						$.each(jsonData, function (object, objectData) {
 							for(var k = .5; k <= duration(objectData.StartTime, objectData.EndTime); k += .5){
-								if(objectData.StartTime == timeStr(t) || objectData.EndTime == timeStr(t+k)){
+								if(objectData.StartTime == timeStr(t) || (objectData.EndTime == timeStr(t+k) && toTime(objectData.StartTime) < t)){
 									items[1] = "<td>" + formatTime(timeStr(t)) + " -" + formatTime(timeStr(t + .5)) + "</td>";
 									items[3] = ("<td>Booked</td>");
 								}
@@ -60,6 +60,15 @@
 					t = "12" + t.substr(2);
 				}
 				return t.substr(0, 5) + t.substr(8);
+			}
+			
+			/**
+			*Converts a XML format time string into the time format used by the script.
+			**/
+			function toTime(t){
+				var output = parseInt(t.substr(11, 13));
+				if(t.substr(14, 16) == "30") output += .5;
+				return output;
 			}
 			
 			function timeStr(t){
