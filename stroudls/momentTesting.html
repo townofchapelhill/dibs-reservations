@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>testing</title>
+
+	<meta name="viewport" content="width=device-width" />
+    <title>DiBS Web API</title>
+    <script src="https://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+	<script src="moment.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- <link rel="stylesheet" type="text/css" href="dibs_1.css"></link> -->
+ 
+</head>
+<body>
+				<div class = "col-sm-4">
+					<h2 class="title"></h2>
+						<h3 id="room"></h3>	
+							<div class = "table-responsive">
+	    						<table class="table">
+	    					</table>
+						</div>
+					</div>
+					
+
+	 <script type="text/javascript">
+	 	
+	 	// Setting Variables
+	 	var currentDate = moment().format('MMMM DD, YYYY HH:mm');
+	 	var titleDate = moment().format('MMMM DD, YYYY');
+	 	var roomID = 48;
+	 	var roomNumber = roomID - 47;
+		var date = new Date().toISOString().slice(0,10);
+		console.log(currentDate);
+		var now = moment().day();
+		console.log(now);
+		// var firstHour = moment(0900).format('HH:mm');
+		// console.log(firstHour);
+
+
+		// Populating the html with info about date & room #
+		$(".title").append("Available room reservations for: " + titleDate);
+		$("#room").append('Library room number: ' + roomNumber);
+
+		// API call
+		var apiQuery = "https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + roomID;
+
+		$.ajax({
+			url: apiQuery,
+			method: "GET"
+		}).done(function(response) {
+			
+			// Stores times that have already been booked
+			var bookedTimes = [];
+
+			// loop for getting the booked times out of the json object
+			for (var i = 0; i < response.length; i++) {
+				bookedTimes.push(response[i]);
+			};
+
+			console.log(bookedTimes);
+
+			// further isolating the time data. Planning to use this to make the comparison of booked times vs open times
+			for (var j = 0; j < bookedTimes.length; j++) {
+							
+				var bookedStart = bookedTimes[j].StartTime;
+				var bookedEnd = bookedTimes[j].EndTime;
+					console.log("===========open time============");
+					console.log(bookedStart);
+					// console.log("-----------interval------------");
+					console.log(bookedEnd);
+			};
+
+
+			// From old code, displays links for reserving times.  Adapting it for my own purposes
+			for (var i = openHours()[0]; i < openHours()[1]; i += .5) {
+							console.log(i);
+							var roomTimes = [];
+							roomTimes.push("<tr>");
+							roomTimes.push("<td><a href=http://chapelhill.evanced.info/dibs/?room=" + roomID);
+							console.log(roomTimes);
+
+			};
+
+		});
+		
+
+
+		// From old code, gets list of reservable times based on library hours.  Again, adapting
+		// function openHours() {
+		// 		var open = new Date();
+		// 		if(open.getDay() == 0 || open.getDay() == 6) return [10, 18];
+		// 		if(open.getDay() == 5) return [9, 18];
+		// 		else return [9, 20];
+		// 		// console.log(open);
+		// 	};
+
+		function openHours() {
+			
+			var day = moment().day();
+			var firstHour = moment('').hour('');
+			
+			if (day === 6 || day === 7) {
+				firstHour = moment(10).format('HH:mm');
+				return [10, 18];
+			} 
+			if(day === 5) {
+				firstHour = moment(9).format('HH:mm');
+				return [9, 18];
+			}
+			else {
+				firstHour = moment(9).format('HH:mm');
+				return [9, 20];
+			};
+			console.log(firstHour);
+		};
+	 	
+
+
+
+
+
+
+
+	 </script>
+
+</body>
+</html>
