@@ -26,98 +26,125 @@
 
 	 <script type="text/javascript">
 	 	
-	 	// Setting Variables
-	 	var currentDate = moment().format('MMMM DD, YYYY HH:mm');
-	 	var titleDate = moment().format('MMMM DD, YYYY');
-	 	var roomID = 48;
-	 	var roomNumber = roomID - 47;
-		var date = new Date().toISOString().slice(0,10);
-		console.log(currentDate);
-		var now = moment().day();
-		console.log(now);
-		// var firstHour = moment(0900).format('HH:mm');
-		// console.log(firstHour);
+// Setting Variables
+var currentDate = moment().format('MMMM DD, YYYY HH:mm');
+var titleDate = moment().format('MMMM DD, YYYY');
+var roomID = 48;
+var roomNumber = roomID - 47;
+var date = new Date().toISOString().slice(0,10);
+console.log(currentDate);
+var day = moment().day();
+var firstHour = '';
 
 
-		// Populating the html with info about date & room #
-		$(".title").append("Available room reservations for: " + titleDate);
-		$("#room").append('Library room number: ' + roomNumber);
+// Populating the html with info about date & room #
+$(".title").append("Available room reservations for: " + titleDate);
+$("#room").append('Library room number: ' + roomNumber);
 
-		// API call
-		var apiQuery = "https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + roomID;
+// API call
+var apiQuery = "https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + roomID;
 
-		$.ajax({
-			url: apiQuery,
-			method: "GET"
-		}).done(function(response) {
-			
-			// Stores times that have already been booked
-			var bookedTimes = [];
+// Ajax call to be made once document is loaded
+$(document).ready(function checkTimes() {
+$.ajax({
+	url: apiQuery,
+	method: "GET"
+}).done(function(response) {
+	
+	// Stores times that have already been booked
+	var rawBookedTimes = [];
+	var cookedBookTimes = [];
+	var roomLinks = [];
 
-			// loop for getting the booked times out of the json object
-			for (var i = 0; i < response.length; i++) {
-				bookedTimes.push(response[i]);
-			};
+	// loop for getting the booked times out of the json object
+	for (var i = 0; i < response.length; i++) {
+		rawBookedTimes.push(response[i]);
+	};
 
-			console.log(bookedTimes);
+	console.log(rawBookedTimes);
+	console.log(cookedBookTimes);
+	console.log(roomLinks);
 
-			// further isolating the time data. Planning to use this to make the comparison of booked times vs open times
-			for (var j = 0; j < bookedTimes.length; j++) {
-							
-				var bookedStart = bookedTimes[j].StartTime;
-				var bookedEnd = bookedTimes[j].EndTime;
-					console.log("===========open time============");
-					console.log(bookedStart);
-					// console.log("-----------interval------------");
-					console.log(bookedEnd);
-			};
+	// further isolating the time data. Planning to use this to make the comparison of booked times vs open times
+	for (var j = 0; j < rawBookedTimes.length; j++) {
+					
+		var bookedStart = rawBookedTimes[j].StartTime;
+		var bookedEnd = rawBookedTimes[j].EndTime;
+		var splitBookStart = bookedStart.split("T");
+		var splitBookEnd = bookedEnd.split("T");	
+			cookedBookTimes.push(splitBookStart[1] + " - " + splitBookEnd[1]);
+	};
 
+// Depending on the day, sets the hours the library is open.  
+// Loops through, creating a boolean value to help with comarison function 
+function openHours() {
+	var open = '';
+	var close = '';
 
-			// From old code, displays links for reserving times.  Adapting it for my own purposes
-			for (var i = openHours()[0]; i < openHours()[1]; i += .5) {
-							console.log(i);
-							var roomTimes = [];
-							roomTimes.push("<tr>");
-							roomTimes.push("<td><a href=http://chapelhill.evanced.info/dibs/?room=" + roomID);
-							console.log(roomTimes);
+	if (day === 6 || day === 7) {
+		var open = "10:00:00";
+		var close = "18:00:00";
+	}
+	if (day === 5) {
+		var open = "9:00:00";
+		var close = "18:00:00";
+	} else {
+		var open = "9:00:00";
+		var close = "20:00:00";
+	};
+	
+	var openHours = {
+		
+		startTime: open,
+		endTime: close,
+		slots: []
+		
+		}
+		console.log(openHours.slots);
+		var open = parseFloat(openHours.startTime.split(':')[0], 10);
+		var close = parseFloat(openHours.endTime.split(':')[0], 10);
 
-			};
-
+		while (open <= close) {
+		var currentSlot;
+		if (Math.floor(open) === open) {
+			currentSlot = "" + open + ":00";
+		} else {
+			var timeSliced = ("" + open).split('.')[0]
+			currentSlot = timeSliced + ":30"
+		};
+		openHours.slots.push({
+			time: currentSlot,
+			available: true
 		});
+		open += 0.5
+	};
+};
+
+openHours();		
+			
+			
+			// Saving this for later, I need some pieces of it.
+			// for (var i = openHours()[0]; i < openHours()[1]; i += .5) {
+			// 		var list = "<li>";
+			// 		var roomHour = moment().hour(i).minute(00).second(00).format('HH:mm:ss');
+			// 		var roomData = "data-name" + "=" + roomHour;
+			// 		var link = "<a href=http://chapelhill.evanced.info/dibs/?room=" + roomID + ">";
+			// 		roomLinks.push(list + roomData + link);
+					
+
+			// 			for (var j = 1; j < roomLinks.length; j += 2) {
+
+			// 			}
+			// 	};
+
+		
+
+	});
+});
 		
 
 
-		// From old code, gets list of reservable times based on library hours.  Again, adapting
-		// function openHours() {
-		// 		var open = new Date();
-		// 		if(open.getDay() == 0 || open.getDay() == 6) return [10, 18];
-		// 		if(open.getDay() == 5) return [9, 18];
-		// 		else return [9, 20];
-		// 		// console.log(open);
-		// 	};
-
-		function openHours() {
 			
-			var day = moment().day();
-			var firstHour = moment('').hour('');
-			
-			if (day === 6 || day === 7) {
-				firstHour = moment(10).format('HH:mm');
-				return [10, 18];
-			} 
-			if(day === 5) {
-				firstHour = moment(9).format('HH:mm');
-				return [9, 18];
-			}
-			else {
-				firstHour = moment(9).format('HH:mm');
-				return [9, 20];
-			};
-			console.log(firstHour);
-		};
-	 	
-
-
 
 
 
