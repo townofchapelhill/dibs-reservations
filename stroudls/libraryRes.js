@@ -1,31 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>testing</title>
-
-	<meta name="viewport" content="width=device-width" />
-    <title>DiBS Web API</title>
-    <script src="https://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<!-- <link rel="stylesheet" type="text/css" href="dibs_1.css"></link> -->
- 
-</head>
-<body>
-				<div class = "col-sm-4">
-					<h2 class="title"></h2>
-						<h3 id="room"></h3>	
-							<div class=table-responsive>
-								<p id=room-times></p>
-	    						<table class="table">
-	    					</table>
-						</div>
-					</div>
-					
-
-	 <script type="text/javascript">
-	 	
 // Setting Variables
 var currentDate = moment().format('MMMM DD, YYYY HH:mm');
 var titleDate = moment().format('MMMM DD, YYYY');
@@ -41,10 +13,6 @@ var reservedHours = [];
 var intTime = [];
 var interval = [];
 
-// Populating the html with info about date & room #
-$(".title").append("Available room reservations for: " + titleDate);
-$("#room").append('Library room number: ' + roomNumber);
-
 // API call
 var apiQuery = "https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + roomID;
 
@@ -56,26 +24,32 @@ $(document).ready(function checkTimes() {
 
 	}).done(function(response) {
 
-			openTimes();
-			// getting the booked times out of the json object
-			for (var i = 0; i < response.length; i++) {
-				rawBookedTimes.push(response[i]);
-			};
+        // Populating the html with info about date & room #
+        $(".title").append("Available room reservations for: " + titleDate);
+        $("#room").append('Library room number: ' + roomNumber);
+            
+        // calls openTimes function to supply buttons
+        openTimes();
 
-			// further isolating the time data. 
-			// storing data in reserved hours array
-			for (var j = 0; j < rawBookedTimes.length; j++) {
-							
-				var bookedStart = rawBookedTimes[j].StartTime;
-				var bookedEnd = rawBookedTimes[j].EndTime;
-				var splitBookStart = bookedStart.split("T");
-				var splitBookEnd = bookedEnd.split("T");	
-				reservedHours.push({
-					start: splitBookStart[1],
-					end: splitBookEnd[1]
-				});
-			};
-		
+        // getting the booked times out of the json object
+        for (var i = 0; i < response.length; i++) {
+            rawBookedTimes.push(response[i]);
+        };
+
+        // further isolating the time data. 
+        // storing data in reserved hours array
+        for (var j = 0; j < rawBookedTimes.length; j++) {
+                        
+            var bookedStart = rawBookedTimes[j].StartTime;
+            var bookedEnd = rawBookedTimes[j].EndTime;
+            var splitBookStart = bookedStart.split("T");
+            var splitBookEnd = bookedEnd.split("T");	
+            reservedHours.push({
+                start: splitBookStart[1],
+                end: splitBookEnd[1]
+            });
+        };
+    
 		// converting reserved times into integer values to compare in openHours function
 		for (var i = 0; i < reservedHours.length; i++) {
 			var intTimeStart = parseFloat(reservedHours[i].start.split(':')[0], 10);
@@ -88,9 +62,9 @@ $(document).ready(function checkTimes() {
 		console.log(reservedHours);
 		console.log(intTime);
 
-		// // intended to run the comparison here
-		// // currently broken, but I think it could work
-		// // maybe, I've been wrong about a lot on this one
+        // IT"S ALIVE!!!
+        // This is a bit more hacky of a solution than I wanted
+        // but it works now, at least on this document
 		for (var n = 0; n < intTime.length; n++) {
 			var start = intTime[n].start;
 			var end = intTime[n].end;
@@ -104,9 +78,8 @@ $(document).ready(function checkTimes() {
 					};
 				};
 			};
-			// console.log(end);
-			// break;
-		};
+        };
+        
 		// Depending on the day, sets the hours the library is open.  
 		// Loops through, creating a boolean value to help with comparison & DOM manipulation  
 		function openTimes() {
@@ -162,36 +135,13 @@ $(document).ready(function checkTimes() {
 			for (var i = 0; i < openHours.slots.length; i++) {
 				var times = openHours.slots[i].time;
 				var isOpen = openHours.slots[i].available;
-				var button = "<button class=reserve a href=http://chapelhill.evanced.info/dibs/?room=" + roomID + " id=" + times + " value=" + isOpen + ">" + times;
+                var button = "<button class=reserve a href=http://chapelhill.evanced.info/dibs/?room=" + roomID + " value=" + isOpen + ">" + times;
+                if (isOpen === false) {
+                    button.attr("class=taken");
+                };
 				$("#room-times").append(button);
 			};
 		};
-		// blocktime();
-		// function blocktime(time, openHours, openTimes) {
-		// 	//Needs to compare intTime to time
-		// 	//Count intTime from endTime to startTim
-		// 	for (var n = 0; n < intTime.length; n++) {
-		// 	var start = intTime[n].start;
-		// 	var end = intTime[n].end;
-		// 	var totalTime = end - start;
-		// 	console.log(totalTime);
-		// 	if (openHours.slots.time === "9:00") {
-		// 			openHours.slots.available = false
-		// 		};
-		// 	// console.log(start);
-		// 	// console.log(end);
-		// 	// openHours();
-		// 	// break;
-		// };
-		// 	//for i <= totalTime
-		// 	// 	increase startTime by .5
-		// 	//openHours.slots.push({
-		// 	//	time: currentSlot,
-		// 	//			available: false
-		// };
+		
 	});
 });
-</script>
-
-</body>
-</html>
