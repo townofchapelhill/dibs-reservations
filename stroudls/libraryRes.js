@@ -4,7 +4,6 @@ var titleDate = moment().format('MMMM DD, YYYY');
 var roomID = 48;
 var roomNumber = roomID - 47;
 var date = new Date().toISOString().slice(0,10);
-console.log(currentDate);
 var day = moment().day();
 var rawBookedTimes = [];
 var cookedBookTimes = [];
@@ -12,6 +11,7 @@ var openHours = {};
 var reservedHours = [];
 var intTime = [];
 var interval = [];
+
 
 // API call
 var apiQuery = "https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + roomID;
@@ -59,8 +59,6 @@ $(document).ready(function checkTimes() {
 				end: intTimeEnd
 			});
 		};
-		console.log(reservedHours);
-		console.log(intTime);
 
         // IT"S ALIVE!!!
         // This is a bit more hacky of a solution than I wanted
@@ -69,15 +67,30 @@ $(document).ready(function checkTimes() {
 			var start = intTime[n].start;
 			var end = intTime[n].end;
 			var totalTime = end - start;
-			// console.log(totalTime);
 			for (var p = intTime[n].start; p < intTime[n].end; p += 0.5) {
-				console.log(p);
 				for (var t = 0; t < openHours.slots.length; t++) {
 					if (p === openHours.slots[t].integer) {
 						openHours.slots[t].available = false;
 					};
 				};
 			};
+        };
+
+        // loop for adding buttons on the html
+        // reserved slots do not have a link attached to them
+        // so users cannot attempt to book rooms that are already booked
+        for (var i = 0; i < openHours.slots.length; i++) {
+            var times = moment().format(openHours.slots[i].time, "hh:mm");
+            var isOpen = openHours.slots[i].available;
+            var tableRow = "<tr class=container>";
+            var tableD = "<td id=reserve>"
+            var button = "<button class=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + ">" + times;
+            if (openHours.slots[i].available === false || $(".redirect").val() === false) {
+                var button = "<button class=redirect value=" + isOpen + ">" + times;
+                $(".redirect").text("booked").css("background-color", "#d6d6d6");
+                $(".container").css("background-color", "#d6d6d6")
+            };
+            $(".table").append(tableRow + tableD + button);
         };
         
 		// Depending on the day, sets the hours the library is open.  
@@ -97,51 +110,36 @@ $(document).ready(function checkTimes() {
 				var open = "9:00:00";
 				var close = "20:00:00";
 			};
-			
+            
+            // stores data about times
 			openHours = {
 				startTime: open,
 				endTime: close,
 				slots: []	
 			};
 
-			console.log(openHours.slots);
+            // converts the open and close variables to integer values
 			var open = parseFloat(openHours.startTime.split(':')[0], 10);
 			var close = parseFloat(openHours.endTime.split(':')[0], 10);
-			console.log(open);
-			console.log(close);
 
-			while (open < close) {
+            // loops from open to close by + .5 to simulate 30 minute intervals
+            // currentSlot is a string, representing actual time.  Increments with the integer vaules
+            while (open < close) {
 			var currentSlot;
 				if (Math.floor(open) === open) {
 					currentSlot = "" + open + ":00";
-					console.log(currentSlot);
-					// blocktime(Math.floor(open));
 				} else {
 					var timeSliced = ("" + open).split('.')[0]
 					currentSlot = timeSliced + ":30"
-				};
+                };
+                // pushes data gathered from loop into openHours object
 					openHours.slots.push({
-					time: currentSlot,
+					time: moment(currentSlot, "HH:mm").format("hh:mm"),
 					available: true,
 					integer: open
 				});
 				open += 0.5
 			};
-
-			// loop for adding buttons on the html
-			// One day, this will hide buttons that lie between reserved times
-			// Also, pay no mind to the formatting, that will be fixed once
-			// once the comparison is up and running
-			for (var i = 0; i < openHours.slots.length; i++) {
-				var times = openHours.slots[i].time;
-				var isOpen = openHours.slots[i].available;
-                var button = "<button class=reserve a href=http://chapelhill.evanced.info/dibs/?room=" + roomID + " value=" + isOpen + ">" + times;
-                if (isOpen === false) {
-                    button.attr("class=taken");
-                };
-				$("#room-times").append(button);
-			};
-		};
-		
-	});
+		};		
+    });
 });
