@@ -1,9 +1,9 @@
-.table, .redirect, .booked{
+.table, th, td{
 	border-collapse: collapse;
-    border: 1px solid black;
+    border: 3px solid black;
 	text-align: center;
 	margin: 0 auto;
-	font-family: Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;  
 }
 
 .table-responsive{
@@ -29,6 +29,10 @@ th, td {
 	font-size: 2em;
 }
 
+.title {
+    margin-top: 10%;
+}
+
 h2{
 	text-align: center;
 	font-family: Arial, Helvetica, sans-serif;
@@ -36,21 +40,22 @@ h2{
 }
 
 body{
-  background: url("../header.png") no-repeat center top, url("../dibs_1.png") no-repeat center center fixed;
+  background: url("../assets/header.png") no-repeat center top, url("../assets/dibs_1.png") no-repeat center center fixed;
   -webkit-background-size: contain, cover;
   -moz-background-size: contain, cover;
   -o-background-size: contain, cover;
   background-size: contain, cover;
 }
 
-.col-sm-5{
+.col-sm-1{
 	color: ffffff;
-	text-align: center;
+    text-align: center;
+    height: 100%;
 }
 
-.col-sm-4{
-	width: 55%;
-	text-align: center;
+#col-sm-1{
+    text-align: center;
+    height: 100%;
 }
 
 .room-number{

@@ -31,8 +31,8 @@ function checkTimes() {
 	}).done(function(response) {
 
         // Populating the html with info about date & room #
-        $(".title").append("Available room reservations for: " + titleDate);
-        $("#room").append('Library room number: ' + roomNumber);
+        $(".title").append("Room reservations for: " + titleDate);
+		$(".room-number").append((roomID - 47));
             
         // calls openTimes function to supply buttons
 		openTimes();
@@ -59,6 +59,7 @@ function checkTimes() {
             });
         };
 
+		console.log(reservedHours);
 		// converting reserved times into integer values to compare in openHours function
 		for (var i = 0; i < reservedHours.length; i++) {
 			var intTimeStart = parseFloat(reservedHours[i].start.split(':')[0]);
@@ -95,12 +96,14 @@ function checkTimes() {
 			};
         };
 
+		console.log(parseFloat(moment().format("HH:mm")));
         // loop for adding buttons on the html
         // reserved slots do not have a link attached to them
         // so users cannot attempt to book rooms that are already booked
         for (var i = 0; i < openHours.slots.length; i++) {
             var times = openHours.slots[i].time;
 			var isOpen = openHours.slots[i].available;
+			console.log(openHours.slots[i].integer)
 			if (openHours.slots[i].available === false) {
                 var button = "<p class='booked' value=" + isOpen + ">" + times + " | Booked";
                 $(".booked").css("background-color", "#d6d6d6");
@@ -109,7 +112,11 @@ function checkTimes() {
 			if (openHours.slots[i].available === true) {
 				var button = "<p class=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + ">" + times  + " | Open";
 			};
+			if (openHours.slots[i].integer < parseFloat(moment().format("HH:mm"))) {
+				var button = "<p class='past' value=" + isOpen + ">" + times + " | Booked";
+			};
 			$(".table").append(button);
+			$(".past").hide();
         };
         
 		// Depending on the day, sets the hours the library is open.  

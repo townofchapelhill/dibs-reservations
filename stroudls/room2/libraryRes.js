@@ -1,7 +1,7 @@
 // Setting Variables
 var currentDate = moment().format('MMMM DD, YYYY HH:mm');
 var titleDate = moment().format('MMMM DD, YYYY');
-var roomID = 48;
+var roomID = 49;
 var roomNumber = roomID - 47;
 var date = new Date().toISOString().slice(0,10);
 var day = moment().day();
@@ -80,6 +80,7 @@ function checkTimes() {
 		// sots intTime array in ascending order to assist later comparison
 		intTime.sort(function(a, b){return a.start - b.start});
 
+		console.log(reservedHours);
 		// Compares integers from the intTime array against the integer values stored in openHours.slots.integer
 		// If the values match, it sets the respective openHours.slots.available value to false
 		for (var n = 0; n < intTime.length; n++) {

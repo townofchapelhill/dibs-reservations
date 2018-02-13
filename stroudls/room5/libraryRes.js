@@ -1,7 +1,7 @@
 // Setting Variables
 var currentDate = moment().format('MMMM DD, YYYY HH:mm');
 var titleDate = moment().format('MMMM DD, YYYY');
-var roomID = 48;
+var roomID = 52;
 var roomNumber = roomID - 47;
 var date = new Date().toISOString().slice(0,10);
 var day = moment().day();
@@ -45,6 +45,7 @@ function checkTimes() {
             rawBookedTimes.push(response[i]);
         };
 
+		console.log(reservedHours);
         // further isolating the time data. 
         // storing data in reserved hours array
         for (var j = 0; j < rawBookedTimes.length; j++) {
