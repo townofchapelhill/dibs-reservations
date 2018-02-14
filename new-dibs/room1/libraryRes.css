@@ -4,14 +4,14 @@
 	text-align: center;
     margin: 0 auto;
     overflow-wrap: normal;  
-    width: 100%;
     font-family: Arial, Helvetica, sans-serif;  
 }
 
 .table-responsive{
-    width: 100%;
     display: block;
     text-decoration: none;
+    width: 450px;
+    height: 500px;
 }
 
 th, td {
@@ -19,28 +19,75 @@ th, td {
 	font-size: 2em;
 }
 
-.redirect, .booked {
-    width: 100%;
+.redirect {
+    width: 50%;
+    height: 100%;
+    display: block;
     background-color: #79bd90;
     text-decoration: none;
     font-size: 2em;
     border-collapse: collapse;
-    border: 1px solid black;
+    border: 0.2px solid rgb(8, 8, 8);
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0 auto;
+    padding-top: 1.5px;
+    float: right;
+}
+
+.links {
+    display: block;
+    overflow: hidden;
+}
+
+.booked{
+    width: 50%;
+    height: 100%;
+    display: block;
+    background-color: #d6d6d6;
+    text-decoration: none;
+    font-size: 2em;
+    border-collapse: collapse;
+    border: 0.2px solid rgb(8, 8, 8);
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-top: 1.5px;
+    margin: 0 auto;
+    float: right;
+}
+
+.bookedTwo {
+    width: 50%;
+    background-color: #d6d6d6;
+    text-decoration: none;
+    font-size: 2em;
+    padding-top: 2px;
+    border-collapse: collapse;
+    border: 1px solid rgb(2, 2, 2);
 	text-align: center;
     font-family: Arial, Helvetica, sans-serif;
     margin: 0 auto;
+    float: left; 
 }
 
+.time {
+    width: 50%;
+    background-color: #79bd90;
+    text-decoration: none;
+    font-size: 2em;
+    padding-top: 2px;
+    border-collapse: collapse;
+    border: 1px solid rgb(2, 2, 2);
+	text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0 auto;
+    float: left;
+}
 
 th, td {
 	font-size: 2em;
 }
 
-/* h2{
-	text-align: center;
-	font-family: Arial, Helvetica, sans-serif;
-	color: ffffff;
-} */
 
 body{
   background: url("../assets/header.png") no-repeat center top, url("../assets/dibs_1.png") no-repeat center center fixed;
@@ -57,12 +104,12 @@ body{
 
 #col-sm-4{
     text-align: center;
-    width: 55%
+    float: right;
 }
 
 .title {
     color: white; 
-    text-align: center;
+    font-size: 160%;
 	font-family: Arial, Helvetica, sans-serif;
 	color: ffffff; 
 }

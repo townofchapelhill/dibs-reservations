@@ -1,7 +1,7 @@
 // Setting Variables
 var currentDate = moment().format('MMMM DD, YYYY HH:mm');
 var titleDate = moment().format('MMMM DD, YYYY');
-var roomID = 48;
+var roomID = 54;
 var roomNumber = roomID - 47;
 var date = new Date().toISOString().slice(0,10);
 var day = moment().day();
@@ -16,25 +16,24 @@ var intervalId;
 
 // API call
 var apiQuery = "https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + roomID;
-
+console.log(apiQuery);
 // calls checkTimes function on document load
 $(document).ready(function() {
 	checkTimes();
+	// Populating the html with info about date & room #
+	$(".title").append("Room reservations for: " + titleDate);
+	$(".room-number").append((roomID - 47));
 });
 
-// Ajax call to be made once document is loaded
+// Checks for booked times, compares them against times of the day and handles DOM manipulation
 function checkTimes() {
 	$.ajax({
 		url: apiQuery,
 		method: "GET"
 
 	}).done(function(response) {
-
-        // Populating the html with info about date & room #
-        $(".title").append("Room reservations for: " + titleDate);
-		$(".room-number").append((roomID - 47));
             
-        // calls openTimes function to supply buttons
+        // calls openTimes function to supply links
 		openTimes();
 		
 		// Decreases intervalTimer by 1 every second
@@ -64,6 +63,7 @@ function checkTimes() {
 		for (var i = 0; i < reservedHours.length; i++) {
 			var intTimeStart = parseFloat(reservedHours[i].start.split(':')[0]);
 			var intTimeEnd = parseFloat(reservedHours[i].end.split(':')[0]);
+			
 			// if the string contains a 30:00, then add .5 to the integer value
 			// improves accuracy of comparison
 			if (reservedHours[i].start.substring(3) === "30:00") {
@@ -96,26 +96,32 @@ function checkTimes() {
 			};
         };
 
-		console.log(parseFloat(moment().format("HH:mm")));
         // loop for adding buttons on the html
         // reserved slots do not have a link attached to them
         // so users cannot attempt to book rooms that are already booked
         for (var i = 0; i < openHours.slots.length; i++) {
             var times = openHours.slots[i].time;
 			var isOpen = openHours.slots[i].available;
-			console.log(openHours.slots[i].integer)
-			if (openHours.slots[i].available === false) {
-                var button = "<p class='booked' value=" + isOpen + ">" + times + " | Booked";
-                $(".booked").css("background-color", "#d6d6d6");
-            	$(".container").css("background-color", "#d6d6d6");
-			}; 
-			if (openHours.slots[i].available === true) {
-				var button = "<p class=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + ">" + times  + " | Open";
+			var div = "<div class=links>";
+			var timeSlot = "<p class=time onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + " value=" + isOpen + ">" + times + "</p>";
+			// if the room has been booked, gray out link
+			if (openHours.slots[i].available === false || $(".time").val() == "false") {
+                var button = "<button class=booked value=" + isOpen + ">" + " Booked";
+				var timeSlot = "<p class=bookedTwo>" + times + "</p>";
 			};
+			// if a room is available, continue as normal 
+			if (openHours.slots[i].available === true || $(".time").val() == "true") {
+				var button = "<button class=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + ">" + " Open";
+				$(".time").css("background-color", "#79bd90");
+			};
+			// if the timeslot is in the past, apply a new class that will result in the link being hidden
+			// prevents clutter
 			if (openHours.slots[i].integer < parseFloat(moment().format("HH:mm"))) {
-				var button = "<p class='past' value=" + isOpen + ">" + times + " | Booked";
+				var button = "<button class='past' value=" + isOpen + ">" + times + " | Booked";
+				var timeSlot = "<p class=past>";
+				var div = "<div class=past>";
 			};
-			$(".table").append(button);
+			$(".table").append(div + timeSlot + button);
 			$(".past").hide();
         };
         
@@ -125,6 +131,7 @@ function checkTimes() {
 			var open = '';
 			var close = '';
 
+			// checks for what day of week/weekend, sets hours of operation accordingly
 			if (day === 6 || day === 7) {
 				var open = "10:00:00";
 				var close = "18:00:00";
