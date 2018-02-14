@@ -20,21 +20,20 @@ var apiQuery = "https://chapelhill.evanced.info/dibsAPI/reservations/" + date + 
 // calls checkTimes function on document load
 $(document).ready(function() {
 	checkTimes();
+	// Populating the html with info about date & room #
+	$(".title").append("Room reservations for: " + titleDate);
+	$(".room-number").append((roomID - 47));
 });
 
-// Ajax call to be made once document is loaded
+// Checks for booked times, compares them against times of the day and handles DOM manipulation
 function checkTimes() {
 	$.ajax({
 		url: apiQuery,
 		method: "GET"
 
 	}).done(function(response) {
-
-        // Populating the html with info about date & room #
-        $(".title").append("Room reservations for: " + titleDate);
-		$(".room-number").append((roomID - 47));
             
-        // calls openTimes function to supply buttons
+        // calls openTimes function to supply links
 		openTimes();
 		
 		// Decreases intervalTimer by 1 every second
@@ -64,6 +63,7 @@ function checkTimes() {
 		for (var i = 0; i < reservedHours.length; i++) {
 			var intTimeStart = parseFloat(reservedHours[i].start.split(':')[0]);
 			var intTimeEnd = parseFloat(reservedHours[i].end.split(':')[0]);
+			
 			// if the string contains a 30:00, then add .5 to the integer value
 			// improves accuracy of comparison
 			if (reservedHours[i].start.substring(3) === "30:00") {
@@ -96,7 +96,6 @@ function checkTimes() {
 			};
         };
 
-		console.log(parseFloat(moment().format("HH:mm")));
         // loop for adding buttons on the html
         // reserved slots do not have a link attached to them
         // so users cannot attempt to book rooms that are already booked
@@ -104,14 +103,19 @@ function checkTimes() {
             var times = openHours.slots[i].time;
 			var isOpen = openHours.slots[i].available;
 			console.log(openHours.slots[i].integer)
+
+			// if the room has been booked, gray out link
 			if (openHours.slots[i].available === false) {
                 var button = "<p class='booked' value=" + isOpen + ">" + times + " | Booked";
                 $(".booked").css("background-color", "#d6d6d6");
             	$(".container").css("background-color", "#d6d6d6");
-			}; 
+			};
+			// if a room is available, continue as normal 
 			if (openHours.slots[i].available === true) {
 				var button = "<p class=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + ">" + times  + " | Open";
 			};
+			// if the timeslot is in the past, apply a new class that will result in the link being hidden
+			// prevents clutter
 			if (openHours.slots[i].integer < parseFloat(moment().format("HH:mm"))) {
 				var button = "<p class='past' value=" + isOpen + ">" + times + " | Booked";
 			};
@@ -125,6 +129,7 @@ function checkTimes() {
 			var open = '';
 			var close = '';
 
+			// checks for what day of week/weekend, sets hours of operation accordingly
 			if (day === 6 || day === 7) {
 				var open = "10:00:00";
 				var close = "18:00:00";
