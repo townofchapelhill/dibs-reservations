@@ -1,7 +1,7 @@
 // Setting Variables
 var currentDate = moment().format('MMMM DD, YYYY HH:mm');
 var titleDate = moment().format('MMMM DD, YYYY');
-var roomID = 48;
+var roomID = 49;
 var roomNumber = roomID - 47;
 var date = new Date().toISOString().slice(0,10);
 var day = moment().day();
@@ -99,27 +99,30 @@ function checkTimes() {
         // loop for adding buttons on the html
         // reserved slots do not have a link attached to them
         // so users cannot attempt to book rooms that are already booked
-        for (var i = 0; i < openHours.slots.length; i++) {
+		for (var i = 0; i < openHours.slots.length; i++) {
             var times = openHours.slots[i].time;
 			var isOpen = openHours.slots[i].available;
-			console.log(openHours.slots[i].integer)
+			var div = "<div class=links>";
+			var timeSlot = "<p class=time onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + " value=" + isOpen + ">" + times + "</p>";
 
 			// if the room has been booked, gray out link
-			if (openHours.slots[i].available === false) {
-                var button = "<p class='booked' value=" + isOpen + ">" + times + " | Booked";
-                $(".booked").css("background-color", "#d6d6d6");
-            	$(".container").css("background-color", "#d6d6d6");
+			if (openHours.slots[i].available === false || $(".time").val() == "false") {
+                var button = "<button class=booked value=" + isOpen + ">" + " Booked";
+				var timeSlot = "<p class=bookedTwo>" + times + "</p>";
 			};
 			// if a room is available, continue as normal 
-			if (openHours.slots[i].available === true) {
-				var button = "<p class=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + ">" + times  + " | Open";
+			if (openHours.slots[i].available === true || $(".time").val() == "true") {
+				var button = "<button class=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + ">" + " Open";
+				$(".time").css("background-color", "#79bd90");
 			};
 			// if the timeslot is in the past, apply a new class that will result in the link being hidden
 			// prevents clutter
 			if (openHours.slots[i].integer < parseFloat(moment().format("HH:mm"))) {
-				var button = "<p class='past' value=" + isOpen + ">" + times + " | Booked";
+				var button = "<button class='past' value=" + isOpen + ">" + times + " | Booked";
+				var timeSlot = "<p class=past>";
+				var div = "<div class=past>";
 			};
-			$(".table").append(button);
+			$(".table").append(div + timeSlot + button);
 			$(".past").hide();
         };
         
