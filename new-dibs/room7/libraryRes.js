@@ -16,7 +16,7 @@ var intervalId;
 
 // API call
 var apiQuery = "https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + roomID;
-console.log(apiQuery);
+
 // calls checkTimes function on document load
 $(document).ready(function() {
 	checkTimes();
@@ -57,8 +57,7 @@ function checkTimes() {
                 end: splitBookEnd[1]
             });
         };
-
-		console.log(reservedHours);
+	
 		// converting reserved times into integer values to compare in openHours function
 		for (var i = 0; i < reservedHours.length; i++) {
 			var intTimeStart = parseFloat(reservedHours[i].start.split(':')[0]);

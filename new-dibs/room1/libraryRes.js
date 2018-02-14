@@ -58,7 +58,6 @@ function checkTimes() {
             });
         };
 
-		console.log(reservedHours);
 		// converting reserved times into integer values to compare in openHours function
 		for (var i = 0; i < reservedHours.length; i++) {
 			var intTimeStart = parseFloat(reservedHours[i].start.split(':')[0]);
