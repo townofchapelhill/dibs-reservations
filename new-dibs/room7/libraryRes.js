@@ -1,8 +1,8 @@
 // Setting Variables
 var currentDate = moment().format('MMMM DD, YYYY HH:mm');
 var titleDate = moment().format('MMMM DD, YYYY');
-var roomID = 54;
-var roomNumber = roomID - 47;
+var roomID = 63;
+var roomNumber = roomID - 56;
 var date = new Date().toISOString().slice(0,10);
 var day = moment().day();
 var rawBookedTimes = [];
@@ -22,7 +22,7 @@ $(document).ready(function() {
 	checkTimes();
 	// Populating the html with info about date & room #
 	$(".title").append("Room reservations for: " + titleDate);
-	$(".room-number").append((roomID - 47));
+	$(".room-number").append((roomID - 56));
 });
 
 // Checks for booked times, compares them against times of the day and handles DOM manipulation
