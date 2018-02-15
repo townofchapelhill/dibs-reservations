@@ -98,15 +98,23 @@ function checkTimes() {
         // loop for adding buttons on the html
         // reserved slots do not have a link attached to them
         // so users cannot attempt to book rooms that are already booked
-		for (var i = 0; i < openHours.slots.length; i++) {
-            var times = openHours.slots[i].time;
+		for (var i = 0; i <= openHours.slots.length; i++) {
+			var times = openHours.slots[i].time + " - " + openHours.slots[i + 1].time;
 			var isOpen = openHours.slots[i].available;
 			var div = "<div class=links>";
-			var timeSlot = "<p class=time onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + " value=" + isOpen + ">" + times + "</p>";
+			var timeSlot = "<p class=time onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + " value=" + isOpen + ">" + times + " " + amPm + "</p>";
+			var amPm = ''
+
+			if (openHours.slots[i].integer < 12) {
+				var amPm = 'am'
+			};
+			if (openHours.slots[i].integer >= 12) {
+				var amPm = 'pm'
+			};
 			// if the room has been booked, gray out link
 			if (openHours.slots[i].available === false || $(".time").val() == "false") {
                 var button = "<button class=booked value=" + isOpen + ">" + " Booked";
-				var timeSlot = "<p class=bookedTwo>" + times + "</p>";
+				var timeSlot = "<p class=bookedTwo>" + times + " " + amPm + "</p>";
 			};
 			// if a room is available, continue as normal 
 			if (openHours.slots[i].available === true || $(".time").val() == "true") {
@@ -115,7 +123,7 @@ function checkTimes() {
 			};
 			// if the timeslot is in the past, apply a new class that will result in the link being hidden
 			// prevents clutter
-			if (openHours.slots[i].integer < parseFloat(moment().format("HH:mm"))) {
+			if (openHours.slots[i].integer < parseFloat(moment().format("HH:mm")) + .5) {
 				var button = "<button class='past' value=" + isOpen + ">" + times + " | Booked";
 				var timeSlot = "<p class=past>";
 				var div = "<div class=past>";
@@ -156,7 +164,7 @@ function checkTimes() {
 
             // loops from open to close by + .5 to simulate 30 minute intervals
             // currentSlot is a string, representing actual time.  Increments with the integer vaules
-            while (open < close) {
+            while (open <= close) {
 			var currentSlot;
 				if (Math.floor(open) === open) {
 					currentSlot = "" + open + ":00";
@@ -183,6 +191,9 @@ function reloadTimes() {
 	if (intervalTimer === 0) {
 		$(".table").empty();
 		checkTimes();
+		rawBookedTimes.length = 0;
+		reservedHours.length = 0;
+		intTime.length = 0;
 		intervalTimer = 600;
 	};
 };
