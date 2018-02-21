@@ -102,7 +102,6 @@ function checkTimes() {
 			var times = openHours.slots[i].time + " - " + openHours.slots[i + 1].time;
 			var isOpen = openHours.slots[i].available;
 			var div = "<div class=links>";
-			var timeSlot = "<p class=time onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + " value=" + isOpen + ">" + times + " " + amPm + "</p>";
 			var amPm = ''
 
 			if (openHours.slots[i].integer < 12) {
@@ -111,6 +110,8 @@ function checkTimes() {
 			if (openHours.slots[i].integer >= 12) {
 				var amPm = 'pm'
 			};
+
+			var timeSlot = "<p class=time onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + " value=" + isOpen + ">" + times + " " + amPm + "</p>";
 			// if the room has been booked, gray out link
 			if (openHours.slots[i].available === false || $(".time").val() == "false") {
                 var button = "<button class=booked value=" + isOpen + ">" + " Booked";
