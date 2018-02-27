@@ -1,0 +1,134 @@
+.table, th, td, .redirect, .booked {
+    border-collapse: collapse;
+    border: 1px solid black;
+	text-align: center;
+    margin: 0 auto;
+    font-family: Arial, Helvetica, sans-serif; 
+}
+
+.table-responsive{
+    display: block;
+    text-decoration: none;
+}
+
+th, td {
+    padding: 7px;
+	font-size: 2em;
+}
+
+.redirect {
+    width: 40%;
+    height: 60px;
+    display: block;
+    background-color: #79bd90;
+    text-decoration: none;
+    font-size: 2em;
+    color: #ffffff;
+    border-collapse: collapse;
+    border: 0.2px solid #ffffff;
+    border-left-color: black;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0 auto;
+    padding-top: 1.5px;
+    float: right;
+}
+
+.links {
+    display: block;
+    overflow: hidden;
+}
+
+.booked{
+    width: 40%;
+    height: 60px;
+    display: block;
+    background-color: #d6d6d6;
+    text-decoration: none;
+    font-size: 2em;
+    color: rgb(102, 102, 102);
+    border-collapse: collapse;
+    border: 0.2px solid #ffffff;
+    border-left-color: black;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-top: 1.5px;
+    margin: 0 auto;
+    float: right;
+}
+
+.bookedTwo {
+    background-color: #d6d6d6;
+    text-decoration: none;
+    color: rgb(102, 102, 102);
+    font-size: 2em;
+    padding-top: 8px;
+    border-collapse: collapse;
+    border: 1px solid #ffffff;
+    border-right-color: black;
+	text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0 auto;
+    float: left; 
+}
+
+.time {
+    background-color: #79bd90;
+    color: #ffffff;
+    font-size: 2em;
+    padding-top: 8px;
+    border-collapse: collapse;
+    border: 1px solid #ffffff;
+    border-right-color: black;
+	text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0 auto;
+    float: left;
+}
+
+th, td {
+	font-size: 2em;
+}
+
+
+body{
+  background: url("../assets/header.png") no-repeat center top, url("../assets/dibs_1.png") no-repeat center center fixed;
+  -webkit-background-size: contain, cover;
+  -moz-background-size: contain, cover;
+  -o-background-size: contain, cover;
+  background-size: contain, cover;
+}
+
+.col-sm-5{
+	color: #ffffff;
+    text-align: center;
+}
+
+#col-sm-4{
+    text-align: center;
+    float: right;
+}
+
+.title {
+    color: #ffffff; 
+    font-size: 160%;
+	font-family: Arial, Helvetica, sans-serif;
+	color: ffffff; 
+}
+
+.room-number{
+    color: #ffffff;
+	font-size: 40em;
+	line-height: 450px;
+}
+
+.instructions{
+	font-size: 1.5em;
+}
+
+.foot{
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #ffffff;
+	font-size: 20px;
+}
