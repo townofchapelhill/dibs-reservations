@@ -142,11 +142,12 @@ function checkTimes() {
 			if (day === 6 || day === 7) {
 				var open = "10:00:00";
 				var close = "18:00:00";
-			}
+			};
 			if (day === 5) {
 				var open = "9:00:00";
 				var close = "18:00:00";
-			} else {
+			};
+			if  (day <= 4) {
 				var open = "9:00:00";
 				var close = "20:00:00";
 			};

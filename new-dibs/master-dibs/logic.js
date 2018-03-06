@@ -13,6 +13,8 @@ var intTime = [];
 var tableRow = [];
 var intervalTimer = 600;
 var intervalId;
+var moreTime = true;
+console.log(moreTime);
 
 
 // API call
@@ -24,13 +26,18 @@ $(document).ready(function(currentRoomId) {
     for (var i = 0; i < roomID.length; i++) {
         var currentRoomId = roomID[i];
         console.log(currentRoomId);
-        var apiQuery = "https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + currentRoomId;
+        //var apiQuery = "https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + currentRoomId;
         checkTimes(currentRoomId);
     };
+});
+
     
-    checkTimes(currentRoomId);
+
     // Checks for booked times, compares them against times of the day and handles DOM manipulation
     function checkTimes(currentRoomId) {
+
+        var apiQuery = "https://chapelhill.evanced.info/dibsAPI/reservations/" + date + "/" + currentRoomId;
+        console.log(apiQuery);
         $.ajax({
             url: apiQuery,
             method: "GET"
@@ -102,7 +109,59 @@ $(document).ready(function(currentRoomId) {
             // loop for adding buttons on the html
             // reserved slots do not have a link attached to them
             // so users cannot attempt to book rooms that are already booked
-            
+            if (moreTime === true) {
+                for (var g = 0; g < openHours.slots.length; g++) {
+                    var counter = g + 1;
+                    console.log(counter);
+                    var times = openHours.slots[g].time + " - " + openHours.slots[g + 1].time;
+                    var timeSlot = "<tr class=rowVWade>" + "<td class=time" + " id=" + counter + ">" + times;
+                    $(".table").append(timeSlot);
+                    if (counter = 22) {
+                        moreTime = false;
+                    };
+                };
+            };
+
+            for (var h = 0; h < allRooms.length; h++) {
+                for (var i = 0; i <= allRooms[h].slots.length; i++) {
+                    // for (var m = 0; m < openHours[i].slots.length; m++) {
+                    // var times = allRooms[h].slots[i].time + " - " + allRooms[h].slots[i + 1].time;
+                    var isOpen = allRooms[h].slots[i].available;
+                    var div = "<div id=" + currentRoomId + ">";
+                    var rowId = i;
+                    var column = "<tbody class=display>";
+                    var amPm = '';
+        
+                    if (openHours.slots[i].integer < 12) {
+                        var amPm = 'am'
+                    };
+                    if (openHours.slots[i].integer >= 12) {
+                        var amPm = 'pm'
+                    };
+                    // had to move this to prevent "undefined" first timeslot of day
+                    // var timeSlot = "<p class=time>" + times;
+                    
+                    // if the room has been booked, gray out link
+                    if (allRooms[h].slots[i].available === false || $(".time").val() == "false") {
+                        var button = "<td id=booked value=" + isOpen + " class=" + rowId + ">" + " Booked";
+                    };
+                    // if a room is available, continue as normal 
+                    if (allRooms[h].slots[i].available === true || $(".time").val() == "true") {
+                        var button = "<td id=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + " class=" + rowId + ">" + " Open";
+                        $(".time").css("background-color", "#79bd90");
+                    };
+                    // if the timeslot is in the past, apply a new class that will result in the link being hidden
+                    // prevents clutter
+                    if (allRooms[h].slots[i].integer < parseFloat(moment().format("HH:mm")) + .5) {
+                        var button = "<button class='past' value=" + isOpen + ">" + " | Booked";
+                        var timeSlot = "<p class=past>";
+                        var div = "<div class=past>";
+                    };
+                    $(".22").after($("#22"));
+                    $(".table").append(button);
+                    $(".past").hide();
+                };
+            };
             // Depending on the day, sets the hours the library is open.  
             // Loops through, creating a boolean value to help with comparison & DOM manipulation  
             function openTimes() {
@@ -153,59 +212,50 @@ $(document).ready(function(currentRoomId) {
                 };
             };
             allRooms.push(openHours);
-            console.log(allRooms);
-            writeTable();		
         });
     };
-});
 
-function writeTable() {
-    for (var h = 0; h < allRooms.length; h++) {
-        for (var i = 0; i <= allRooms[h].openHours; i++) {
-            for (var m = 0; m < openHours[i].slots.length; m++) {
-            var times = allhours[h].openHours.slots[m].time + " - " + allhours[h].openHours.slots[m + 1].time;
-            var isOpen = allHours[h].openHours.slots[m].available;
-            var div = "<div class=links>";
-            var column = "<tbody>";
-            var amPm = '';
+// function writeTable() {
+//     for (var h = 0; h < allRooms.length; h++) {
+//         for (var i = 0; i <= allRooms[h].slots.length; i++) {
+//             // for (var m = 0; m < openHours[i].slots.length; m++) {
+//             // var times = allRooms[h].slots[i].time + " - " + allRooms[h].slots[i + 1].time;
+//             var isOpen = allRooms[h].slots[i].available;
+//             var div = "<div class=links>";
+//             var column = "<tbody>";
+//             var amPm = '';
 
-            if (openHours.slots[m].integer < 12) {
-                var amPm = 'am'
-            };
-            if (openHours.slots[m].integer >= 12) {
-                var amPm = 'pm'
-            };
-            // had to move this to prevent "undefined" first timeslot of day
-            var timeSlot = "<p class=time>" + times;
+//             if (openHours.slots[i].integer < 12) {
+//                 var amPm = 'am'
+//             };
+//             if (openHours.slots[i].integer >= 12) {
+//                 var amPm = 'pm'
+//             };
+//             // had to move this to prevent "undefined" first timeslot of day
+//             // var timeSlot = "<p class=time>" + times;
             
-            // if the room has been booked, gray out link
-            if (allHours[h].openHours.slots[m].available === false || $(".time").val() == "false") {
-                var button = "<td>" + "<button class=booked value=" + isOpen + ">" + " Booked";
-            };
-            // if a room is available, continue as normal 
-            if (allHours[h].openHours.slots[m].available === true || $(".time").val() == "true") {
-                var button = "<td>" + "<button class=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + ">" + " Open";
-                $(".time").css("background-color", "#79bd90");
-            };
-            // if the timeslot is in the past, apply a new class that will result in the link being hidden
-            // prevents clutter
-            if (allHours[h].openHours.slots[m].integer < parseFloat(moment().format("HH:mm")) + .5) {
-                var button = "<button class='past' value=" + isOpen + ">" + times + " | Booked";
-                var timeSlot = "<p class=past>";
-                var div = "<div class=past>";
-            };
-                $(".table").append(timeSlot);
-                $(".table").append("<tr>" + button);
-                tableRow.push("<tr>");
-                tableRow.push("<td>" + timeSlot + button);
-                for (var p = 0; p < tableRow.length; p++) {
-                    $(".table").append(tableRow[p]);
-                }
-                $(".past").hide();
-            };
-        };
-    };
-}
+//             // if the room has been booked, gray out link
+//             if (allRooms[h].slots[i].available === false || $(".time").val() == "false") {
+//                 var button = "<td>" + "<button class=booked value=" + isOpen + ">" + " Booked";
+//             };
+//             // if a room is available, continue as normal 
+//             if (allRooms[h].slots[i].available === true || $(".time").val() == "true") {
+//                 var button = "<td>" + "<button class=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + roomID + "'" + ">" + " Open";
+//                 $(".time").css("background-color", "#79bd90");
+//             };
+//             // if the timeslot is in the past, apply a new class that will result in the link being hidden
+//             // prevents clutter
+//             if (allRooms[h].slots[i].integer < parseFloat(moment().format("HH:mm")) + .5) {
+//                 var button = "<button class='past' value=" + isOpen + ">" + " | Booked";
+//                 var timeSlot = "<p class=past>";
+//                 var div = "<div class=past>";
+//             };
+//             $(".table").append(column + button);
+//             $(".past").hide();
+//         };
+//     };
+// };
+
 
 // timer function that calls the main function every 10 minutes
 // meant to ensure that the displayed available/booked times are still accurate
