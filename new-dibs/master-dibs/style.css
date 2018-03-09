@@ -1,32 +1,62 @@
-.table, th, td, .redirect, .booked {
+th {
     border-collapse: collapse;
     border: 1px solid black;
 	text-align: center;
     margin: 0 auto;
     font-family: Arial, Helvetica, sans-serif; 
+    margin-top: 15px;
+    width: 100%;
+    font-size: 1.75em;
+    height: 51px;
+    padding: 10px;
+    background-color: #1975bc;
+    color: #ffffff;
 }
 
-.table-responsive{
-    display: block;
-    text-decoration: none;
-}
-
-th, td {
-    padding: 7px;
-	font-size: 2em;
-}
-
-.roeVWade {
+.header {
     height: 50px;
 }
 
+.table {
+    border-collapse: collapse;
+    border: 1px solid black;
+	text-align: center;
+    margin: 0 auto;
+    font-family: Arial, Helvetica, sans-serif; 
+    width: 100%;
+}
+
+#master-div {
+    margin-left: 20%;
+    width: 125%;
+}
+
+.col-sm-1 {
+    margin: 0 auto;
+    display: block;
+    margin-left: -32px;
+}
+
+.table-responsive {
+	display: block;
+    text-decoration: none;
+    width: 100%;
+   float: right;
+}
+
+table1, table2, table3, table4, table5, table6, table7 {
+    display: block;
+    text-decoration: none;
+    float: left;
+}
+
 #redirect {
-    width: 40%;
-    height: 60px;
+    width: 100%;
+    height: 80px;
     display: block;
     background-color: #79bd90;
     text-decoration: none;
-    font-size: 2em;
+    font-size: 1.5em;
     color: #ffffff;
     border-collapse: collapse;
     border: 0.2px solid #ffffff;
@@ -34,8 +64,9 @@ th, td {
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
     margin: 0 auto;
-    padding-top: 1.5px;
+    padding-top: 20px;
     float: right;
+    
 }
 
 .links {
@@ -44,19 +75,19 @@ th, td {
 }
 
 #booked{
-    width: 40%;
-    height: 60px;
+    height: 80px;
+    width: 100%;
     display: block;
     background-color: #d6d6d6;
     text-decoration: none;
-    font-size: 2em;
+    font-size: 1.5em;
     color: rgb(102, 102, 102);
     border-collapse: collapse;
-    border: 0.2px solid #ffffff;
+    border: 1px solid #ffffff;
     border-left-color: black;
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
-    padding-top: 1.5px;
+    padding-top: 20px;
     margin: 0 auto;
     float: right;
 }
@@ -65,7 +96,7 @@ th, td {
     background-color: #d6d6d6;
     text-decoration: none;
     color: rgb(102, 102, 102);
-    font-size: 2em;
+    font-size: 1.5em;
     padding-top: 8px;
     border-collapse: collapse;
     border: 1px solid #ffffff;
@@ -78,26 +109,27 @@ th, td {
 
 .time {
     width: 100%;
-    background-color: #79bd90;
-    color: #ffffff;
-    font-size: 2em;
+    background-color: #ffffff;
+    color: #1975bc;
+    font-size: 1.5em;
     padding-top: 8px;
     border-collapse: collapse;
-    border: 1px solid #ffffff;
+    border: 1px solid black;
+    border-top: 2px solid black;
     border-right-color: black;
 	text-align: center;
     font-family: Arial, Helvetica, sans-serif;
     margin: 0 auto;
     float: left;
 }
-
+/* 
 th, td {
 	font-size: 2em;
-}
+} */
 
 
 body{
-  background: url("../assets/header.png") no-repeat center top, url("../assets/dibs_1.png") no-repeat center center fixed;
+  background: url("../assets/header.png") no-repeat center top, url("../assets/dibs.png") no-repeat center center fixed;
   -webkit-background-size: contain, cover;
   -moz-background-size: contain, cover;
   -o-background-size: contain, cover;
