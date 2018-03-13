@@ -71,7 +71,7 @@ function checkTimes(currentRoomId) {
                 id: reservedHours[i].id
             });
         };
-
+        
         openTimes(currentRoomId);
 
         allRooms.forEach(function(openHours) {
@@ -91,59 +91,25 @@ function checkTimes(currentRoomId) {
         });
 
         if (moreTime === true) {
-            for (var g = 0; g < openHours.slots.length; g++) {
-                var counter = g + 1;
-                console.log(counter);
+            for (var g = 0; g <= openHours.slots.length; g++) {
+                var counter = g;
                 var times = openHours.slots[g].time + " - " + openHours.slots[g + 1].time;
                 var timeSlot = "<tbody> <tr class=rowVWade" + " id=" + counter + ">" + "<td class=time>" + times + "</tbody>";
                 if (openHours.slots[g].integer < parseFloat(moment().format("HH:mm")) + .5) {
                     var timeSlot = "<p class=past>";
                 };
                 $("#times").append(timeSlot);
-                if (counter >= 22) {
+                if (counter >= 21) {
                     moreTime = false;
-                    console.log(moreTime);
                 };
             };
         };
 
         if (allRooms.length === 7) {
-            allRooms.forEach(async function(openHours) {
-                for (var i = 0; i <= openHours.slots.length; i++) {
-
-                    var isOpen = openHours.slots[i].available;
-                    var div = "<div id=" + currentRoomId + ">";
-                    var rowId = openHours.slots[i].id;
-                    console.log(rowId);
-                    var column = "<tbody class=display>";
-                    
-                    // if the room has been booked, gray out link
-                    if (openHours.slots[i].available === false) {
-                        var button = "<td id=booked value=" + isOpen + " class=" + rowId + ">" + " Booked";
-                    };
-                    // if a room is available, continue as normal 
-                    if (openHours.slots[i].available === true) {
-                        var button = "<td id=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + currentRoomId + "'" + " class=" + rowId + ">" + " Open";
-                    };
-                    // if the timeslot is in the past, apply a new class that will result in the link being hidden
-                    // prevents clutter
-                    if (openHours.slots[i].integer < parseFloat(moment().format("HH:mm")) + .5) {
-                        var button = "<button class='past' value=" + isOpen + ">" + " | Booked";
-                        var timeSlot = "<p class=past>";
-                        var div = "<div class=past>";
-                    };
-                    $(".table1").append($(".48"), button);
-                    $(".table2").append($(".49"));
-                    $(".table3").append($(".50"));
-                    $(".table4").append($(".51"));
-                    $(".table5").append($(".52"));
-                    $(".table6").append($(".53"));
-                    $(".table7").append($(".63"));
-                    $(".past").hide();
-                };
-            });
+            allRooms.forEach(async function(openHours, currentRoomId) {
+               await writeTimes(openHours, currentRoomId);
+            });   
         };
-    removeDuplicates();
     });
 };
 
@@ -207,4 +173,45 @@ function openTimes(currentRoomId) {
     console.log(allRooms);
 };
 
+function writeTimes(openHours, currentRoomId) { 
+             
+    for (var i = 0; i < (openHours.slots.length - 1); i++) {
 
+        var isOpen = openHours.slots[i].available;
+        var div = "<div id=" + currentRoomId + ">";
+        var rowId = openHours.slots[i].id;
+        console.log(isOpen);
+        var column = "<tbody class=display>";
+        
+        // if the room has been booked, gray out link
+        if (isOpen === false) {
+            var button = "<td id=booked value=" + isOpen + " class=" + rowId + ">" + " Booked";
+        };
+        // if a room is available, continue as normal 
+        if (isOpen === true) {
+            var button = "<td id=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + currentRoomId + "'" + " class=" + rowId + ">" + " Open";
+        };
+        // if the timeslot is in the past, apply a new class that will result in the link being hidden
+        // prevents clutter
+        if (openHours.slots[i].integer < parseFloat(moment().format("HH:mm")) + .5) {
+            var button = "<button class='past' value=" + isOpen + ">" + " | Booked";
+            var timeSlot = "<p class=past>";
+            var div = "<div class=past>";
+        };
+        $(".table1").append($(".48"));
+        $(".table2").append($(".49"));
+        $(".table3").append($(".50"));
+        $(".table4").append($(".51"));
+        $(".table5").append($(".52"));
+        $(".table6").append($(".53"));
+        $(".table7").append($(".63"), button);
+        $(".past").hide();
+    };
+        $(".table1").append($(".48"));
+        $(".table2").append($(".49"));
+        $(".table3").append($(".50"));
+        $(".table4").append($(".51"));
+        $(".table5").append($(".52"));
+        $(".table6").append($(".53")); 
+};
+removeDuplicates();
