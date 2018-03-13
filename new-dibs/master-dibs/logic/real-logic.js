@@ -10,10 +10,11 @@ var intervalTimer = 100;
 var intervalId;
 var moreTime = true;
 var stopLoop = false;
-console.log(moreTime);
 
 $(document).ready(function() {
 
+    // async function to control when the next roomID is sent into the ajax call/comparison loop
+    // it awaits the removeDuplicates call at the bottom of the page
     async function processArray(roomID) {
         var roomID = [48, 49, 50, 51, 52, 53, 63];
         
@@ -23,6 +24,7 @@ $(document).ready(function() {
             await removeDuplicates();
         };
     };
+    // calls processArray on load to start the show
     processArray();
 });
 
@@ -35,11 +37,12 @@ function checkTimes(currentRoomId) {
         method: "GET"
 
     }).done(function(response) {
-        
+        // push resposne into rawBookedTimes array
         for (var i = 0; i < response.length; i++) {
             rawBookedTimes.push(response[i]);
         };
-
+        // loops through rawBookedTimes
+        // splits the JSON time into an easier to manipulate format
         for (var j = 0; j < rawBookedTimes.length; j++) {
                         
             var bookedStart = rawBookedTimes[j].StartTime;
@@ -53,6 +56,7 @@ function checkTimes(currentRoomId) {
             });
         };
 
+        // converts the reserved time strings into integers to allow for comparison
         for (var i = 0; i < reservedHours.length; i++) {
             var intTimeStart = parseFloat(reservedHours[i].start.split(':')[0]);
             var intTimeEnd = parseFloat(reservedHours[i].end.split(':')[0]);
@@ -71,9 +75,9 @@ function checkTimes(currentRoomId) {
                 id: reservedHours[i].id
             });
         };
-
+        // calls open hours to populate the object
         openTimes(currentRoomId);
-
+        // comparison loop to determine if room is booked at a given time
         allRooms.forEach(function(openHours) {
             for (var n = 0; n < intTime.length; n++) {
                 var start = intTime[n].start;
@@ -90,69 +94,40 @@ function checkTimes(currentRoomId) {
             };
         });
 
+        // prevents timeSlots from continuing to append on every ajax call
         if (moreTime === true) {
-            for (var g = 0; g < openHours.slots.length; g++) {
-                var counter = g + 1;
-                console.log(counter);
+            for (var g = 0; g <= openHours.slots.length; g++) {
+                var counter = g;
                 var times = openHours.slots[g].time + " - " + openHours.slots[g + 1].time;
                 var timeSlot = "<tbody> <tr class=rowVWade" + " id=" + counter + ">" + "<td class=time>" + times + "</tbody>";
                 if (openHours.slots[g].integer < parseFloat(moment().format("HH:mm")) + .5) {
                     var timeSlot = "<p class=past>";
                 };
                 $("#times").append(timeSlot);
-                if (counter >= 22) {
+                if (counter >= 21) {
                     moreTime = false;
-                    console.log(moreTime);
                 };
             };
         };
 
+        // loops through the array of objects
         if (allRooms.length === 7) {
-            allRooms.forEach(async function(openHours) {
-                for (var i = 0; i <= openHours.slots.length; i++) {
-
-                    var isOpen = openHours.slots[i].available;
-                    var div = "<div id=" + currentRoomId + ">";
-                    var rowId = openHours.slots[i].id;
-                    console.log(rowId);
-                    var column = "<tbody class=display>";
-                    
-                    // if the room has been booked, gray out link
-                    if (openHours.slots[i].available === false) {
-                        var button = "<td id=booked value=" + isOpen + " class=" + rowId + ">" + " Booked";
-                    };
-                    // if a room is available, continue as normal 
-                    if (openHours.slots[i].available === true) {
-                        var button = "<td id=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + currentRoomId + "'" + " class=" + rowId + ">" + " Open";
-                    };
-                    // if the timeslot is in the past, apply a new class that will result in the link being hidden
-                    // prevents clutter
-                    if (openHours.slots[i].integer < parseFloat(moment().format("HH:mm")) + .5) {
-                        var button = "<button class='past' value=" + isOpen + ">" + " | Booked";
-                        var timeSlot = "<p class=past>";
-                        var div = "<div class=past>";
-                    };
-                    $(".table1").append($(".48"), button);
-                    $(".table2").append($(".49"));
-                    $(".table3").append($(".50"));
-                    $(".table4").append($(".51"));
-                    $(".table5").append($(".52"));
-                    $(".table6").append($(".53"));
-                    $(".table7").append($(".63"));
-                    $(".past").hide();
-                };
-            });
+            allRooms.forEach(async function(openHours, currentRoomId) {
+               await writeTimes(openHours, currentRoomId);
+            });   
         };
-    removeDuplicates();
     });
 };
 
+// removes duplicate entrys that occur during the ajax calls
 function removeDuplicates(rawBookedTimes) {
     let cleanBookedTimes = Array.from(new Set(rawBookedTimes));
     return cleanBookedTimes;
     console.log(cleanBookedTimes);
 };
 
+// controls what times are shown depending on day & populates openHours object
+// for each ajax call
 function openTimes(currentRoomId) {
     var open = '';
     var close = '';
@@ -203,8 +178,60 @@ function openTimes(currentRoomId) {
         });
         open += 0.5
     };
+    // pushes openHours object to allRooms array
     allRooms.push(openHours);
     console.log(allRooms);
 };
 
+// writes buttons to the DOM
+function writeTimes(openHours, currentRoomId) { 
+             
+    for (var i = 0; i < (openHours.slots.length - 1); i++) {
 
+        var isOpen = openHours.slots[i].available;
+        var div = "<div id=" + currentRoomId + ">";
+        var rowId = openHours.slots[i].id;
+        console.log(isOpen);
+        var column = "<tbody class=display>";
+        
+        // if the room has been booked, gray out link
+        if (isOpen === false) {
+            var button = "<td id=booked value=" + isOpen + " class=" + rowId + ">" + " Booked";
+        };
+        // if a room is available, continue as normal 
+        if (isOpen === true) {
+            var button = "<td id=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + currentRoomId + "'" + " class=" + rowId + ">" + " Open";
+        };
+        // if the timeslot is in the past, apply a new class that will result in the link being hidden
+        // prevents clutter
+        if (openHours.slots[i].integer < parseFloat(moment().format("HH:mm")) + .5) {
+            var button = "<button class='past' value=" + isOpen + ">" + " | Booked";
+            var timeSlot = "<p class=past>";
+            var div = "<div class=past>";
+        };
+        // appending buttons
+        // "button" variable had to be included to prevent tables from appending
+        // upside down
+        $(".table1").append($(".48"));
+        $(".table2").append($(".49"));
+        $(".table3").append($(".50"));
+        $(".table4").append($(".51"));
+        $(".table5").append($(".52"));
+        $(".table6").append($(".53"));
+        $(".table7").append($(".63"), button);
+        $(".past").hide();
+    };
+    // It's messy, but I had to do it to prevent table 4's last entry from
+    // appending to table 7
+    // Don't ask me why it does that if this isn't here.
+        $(".table1").append($(".48"));
+        $(".table2").append($(".49"));
+        $(".table3").append($(".50"));
+        $(".table4").append($(".51"));
+        $(".table5").append($(".52"));
+        $(".table6").append($(".53")); 
+};
+
+// Calling this function down here to make sure that the 
+// ajax calls are made in order
+removeDuplicates();
