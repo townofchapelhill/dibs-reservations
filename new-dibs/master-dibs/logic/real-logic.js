@@ -99,7 +99,7 @@ function checkTimes(currentRoomId) {
             for (var g = 0; g <= openHours.slots.length; g++) {
                 var counter = g;
                 var times = openHours.slots[g].time + " - " + openHours.slots[g + 1].time;
-                var timeSlot = "<tbody> <tr class=rowVWade" + " id=" + counter + ">" + "<td class=time>" + times + "</tbody>";
+                var timeSlot = "<tbody class=rowVWade> <tr class=rowVWade" + " id=" + counter + ">" + "<td class=time>" + times + "</tbody>";
                 if (openHours.slots[g].integer < parseFloat(moment().format("HH:mm")) + .5) {
                     var timeSlot = "<p class=past>";
                 };
@@ -187,7 +187,7 @@ function openTimes(currentRoomId) {
 function writeTimes(openHours, currentRoomId) { 
              
     for (var i = 0; i < (openHours.slots.length - 1); i++) {
-
+        var linkId = openHours.slots[i].id;
         var isOpen = openHours.slots[i].available;
         var div = "<div id=" + currentRoomId + ">";
         var rowId = openHours.slots[i].id;
@@ -200,7 +200,7 @@ function writeTimes(openHours, currentRoomId) {
         };
         // if a room is available, continue as normal 
         if (isOpen === true) {
-            var button = "<td id=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + currentRoomId + "'" + " class=" + rowId + ">" + " Open";
+            var button = "<td id=redirect value=" + isOpen +  " onclick=location.href='http://chapelhill.evanced.info/dibs/?room=" + linkId + "'" + " class=" + rowId + ">" + " Open";
         };
         // if the timeslot is in the past, apply a new class that will result in the link being hidden
         // prevents clutter
