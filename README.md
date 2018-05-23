@@ -9,6 +9,9 @@
                   |_|       
 
 </pre>
+Javascript application that allows user to easily view what times are available to reserve for Chapel Hill Public Library's study rooms.  
 
-This repo displays the availability of meeting rooms at the Chapel Hill Public Library, and links to the library's reservation system
-if a room is available.
+Dependencies:
+ moment.js
+ bootstrap
+ jQuery
