@@ -12,6 +12,12 @@
 Javascript application that allows user to easily view what times are available to reserve for Chapel Hill Public Library's study rooms.  
 
 Dependencies:
- moment.js
- bootstrap
- jQuery
+<br>
+ moment.js,
+</br>
+<br>
+ bootstrap,
+</br>
+<br>
+ jQuery,
+</br>
