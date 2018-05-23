@@ -14,10 +14,6 @@ Javascript application that allows user to easily view what times are available 
 Dependencies:
 <br>
  moment.js,
-</br>
-<br>
  bootstrap,
-</br>
-<br>
  jQuery,
 </br>
