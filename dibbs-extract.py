@@ -14,13 +14,16 @@ import secrets, filename_secrets
 rooms = ["48","49","50","51","52","53","63"]
 
 # Output file and record keys
-fieldNames = ['RoomID', 'StartTime', 'EndTime', 'SpaceName', 'Date']
+fieldNames = ['RoomID', 'StartTime', 'EndTime', 'SpaceName', 'Date', 'DayofWeek']
 outputFile = pathlib.Path(filename_secrets.productionStaging).joinpath("dibs_history.csv")
 csvfile = open(outputFile, 'a')
 writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
+if os.stat(outputFile).st_size == 0:
+    # write the header if the file is empty
+    writer.writeheader()
 
-# set start date - the service retains 1 year of reservations
-query_date = datetime.datetime.now() - datetime.timedelta(weeks= 52)
+# set start date - append the past week's reservations to the file
+query_date = datetime.datetime.now() - datetime.timedelta(weeks= 1)
 queryDate = query_date.isoformat().split('T')[0]
 day_delta = datetime.timedelta(days=1)
 today = datetime.datetime.now().isoformat().split('T')[0]
@@ -28,6 +31,8 @@ today = datetime.datetime.now().isoformat().split('T')[0]
 url = "https://chapelhill.evanced.info/dibsAPI/reservations/"
 
 while queryDate <= today:
+    # calculate Day of Week
+    weekDay= query_date.strftime('%A')
     # iterate on room number
     for room in rooms:
         outputRecord = {}
@@ -42,7 +47,7 @@ while queryDate <= today:
             row['Date'] = row['StartTime'].split('T')[0]
             row['StartTime'] = row['StartTime'].split('T')[1]
             row['EndTime'] = row['EndTime'].split('T')[1]
-            print(row)
+            row['DayofWeek'] = weekDay
             writer.writerow(row)
     query_date = query_date + day_delta
     queryDate = query_date.isoformat().split('T')[0]
